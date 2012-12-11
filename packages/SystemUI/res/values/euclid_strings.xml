@@ -89,4 +89,7 @@
      <!-- Name of the VoWiFi status bar icon. -->
      <string name="status_bar_vowifi">Wi-Fi calling (VoWiFi)</string>
 
+     <!-- Navigation bar dpad -->
+     <string name="accessibility_dpad_left">Cursor left</string>
+     <string name="accessibility_dpad_right">Cursor right</string>
 </resources>
