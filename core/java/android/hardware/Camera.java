@@ -3741,6 +3741,7 @@ public class Camera {
          * @see #getSceneMode()
          */
         public void setSceneMode(String value) {
+            if(getSupportedSceneModes() == null) return;
             set(KEY_SCENE_MODE, value);
         }
 
@@ -3778,6 +3779,7 @@ public class Camera {
          * @see #getFlashMode()
          */
         public void setFlashMode(String value) {
+	    if(getSupportedFlashModes() == null) return;
             set(KEY_FLASH_MODE, value);
         }
 
