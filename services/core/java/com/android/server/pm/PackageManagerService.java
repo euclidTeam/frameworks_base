@@ -911,6 +911,8 @@ public class PackageManagerService implements PackageSender, TestUtilityService 
 
     final PendingPackageBroadcasts mPendingBroadcasts;
 
+    ArrayList<ComponentName> mDisabledComponentsList;
+
     static final int SEND_PENDING_BROADCAST = 1;
     // public static final int UNUSED = 5;
     static final int POST_INSTALL = 9;
@@ -2410,6 +2412,17 @@ public class PackageManagerService implements PackageSender, TestUtilityService 
             // Defer the app data fixup until we are done with app data clearing above.
             mPrepareAppDataFuture = mAppDataHelper.fixAppsDataOnBoot();
 
+            // Disable components marked for disabling at build-time
+            mDisabledComponentsList = new ArrayList<ComponentName>();
+            enableComponents(mContext.getResources().getStringArray(
+                    com.android.internal.R.array.config_deviceDisabledComponents), false);
+            enableComponents(mContext.getResources().getStringArray(
+                    com.android.internal.R.array.config_globallyDisabledComponents), false);
+
+            // Enable components marked for forced-enable at build-time
+            enableComponents(mContext.getResources().getStringArray(
+                    com.android.internal.R.array.config_forceEnabledComponents), true);
+
             // Legacy existing (installed before Q) non-system apps to hide
             // their icons in launcher.
             if (mIsPreQUpgrade) {
@@ -2571,6 +2584,29 @@ public class PackageManagerService implements PackageSender, TestUtilityService 
         mServiceStartWithDelay = SystemClock.uptimeMillis() + (60 * 1000L);
 
         Slog.i(TAG, "Fix for b/169414761 is applied");
+    }
+
+    private void enableComponents(String[] components, boolean enable) {
+        // Disable or enable components marked at build-time
+        for (String name : components) {
+            ComponentName cn = ComponentName.unflattenFromString(name);
+            if (!enable) {
+                mDisabledComponentsList.add(cn);
+            }
+            Slog.v(TAG, "Changing enabled state of " + name + " to " + enable);
+            String className = cn.getClassName();
+            PackageSetting pkgSetting = mSettings.mPackages.get(cn.getPackageName());
+            if (pkgSetting == null || pkgSetting.getPkg() == null
+                    || !AndroidPackageUtils.hasComponentClassName(pkgSetting.getPkg(), className)) {
+                Slog.w(TAG, "Unable to change enabled state of " + name + " to " + enable);
+                continue;
+            }
+            if (enable) {
+                pkgSetting.enableComponentLPw(className, UserHandle.USER_OWNER);
+            } else {
+                pkgSetting.disableComponentLPw(className, UserHandle.USER_OWNER);
+            }
+        }
     }
 
     @GuardedBy("mLock")
@@ -6077,6 +6113,12 @@ public class PackageManagerService implements PackageSender, TestUtilityService 
                 callingPackage = Integer.toString(Binder.getCallingUid());
             }
 
+            // Don't allow to enable components marked for disabling at build-time
+            if (mDisabledComponentsList.contains(componentName)) {
+                Slog.d(TAG, "Ignoring attempt to set enabled state of disabled component "
+                        + componentName.flattenToString());
+                return;
+            }
             setEnabledSettings(List.of(new PackageManager.ComponentEnabledSetting(componentName, newState, flags)),
                     userId, callingPackage);
         }
