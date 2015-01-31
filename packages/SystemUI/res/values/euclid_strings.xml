@@ -20,6 +20,11 @@
     <!-- Label for area where tiles can be added to the qs panel -->
     <string name="drag_or_tap_to_add_tiles">Hold &amp; drag or tap to add tiles</string>
 
+    <!-- Sync QS tile -->
+    <string name="quick_settings_sync_label">Sync</string>
+    <string name="accessibility_quick_settings_sync_off">Sync off.</string>
+    <string name="accessibility_quick_settings_sync_on">Sync on.</string>
+
     <!-- Status bar -->
     <string name="status_bar_icons_title">Status bar icons</string>
 
