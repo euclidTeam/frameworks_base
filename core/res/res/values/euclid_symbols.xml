@@ -68,4 +68,7 @@
 
     <!-- Mock Oplus LinearmotorVibratorService -->
     <java-symbol type="bool" name="config_mockOplusLinearmotorVibratorService" />
+
+    <!-- Device hardware keys -->
+    <java-symbol type="integer" name="config_deviceHardwareWakeKeys" />
 </resources>
