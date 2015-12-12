@@ -17,6 +17,7 @@
 package com.android.systemui.euclid
 
 import com.android.systemui.qs.tileimpl.QSTileImpl
+import com.android.systemui.qs.tiles.AmbientDisplayTile
 import com.android.systemui.qs.tiles.AODTile
 import com.android.systemui.qs.tiles.CaffeineTile
 import com.android.systemui.qs.tiles.CellularTile
@@ -37,6 +38,12 @@ import dagger.multibindings.StringKey
 @Module
 interface EuclidOSModule {
 
+    /** Inject AmbientDisplayTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(AmbientDisplayTile.TILE_SPEC)
+    fun bindAmbientDisplayTile(ambientDisplayTile: AmbientDisplayTile): QSTileImpl<*>
+    
     /** Inject AODTile into tileMap in QSModule */
     @Binds
     @IntoMap
