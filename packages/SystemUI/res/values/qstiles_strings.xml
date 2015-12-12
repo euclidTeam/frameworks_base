@@ -16,8 +16,13 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="quick_settings_extra_tiles" translatable="false">
-        caffeine,heads_up,sync,usb_tether,vpn,dataswitch,sound,compass,aod
+        caffeine,heads_up,sync,usb_tether,vpn,dataswitch,sound,compass,aod,ambient_display
     </string>
+
+    <!-- Ambient display QS tile -->
+    <string name="quick_settings_ambient_display_label">Ambient display</string>
+    <string name="accessibility_quick_settings_ambient_display_off">Ambient display off.</string>
+    <string name="accessibility_quick_settings_ambient_display_on">Ambient display on.</string>
 
     <!-- AOD QS tile -->
     <string name="quick_settings_aod_label">AOD</string>
