@@ -1435,6 +1435,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_CAMERA_GESTURE);
         mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, null, UserHandle.ALL);
     }
 
@@ -1930,6 +1931,20 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
                 }
                 finishBarAnimations();
                 mNotificationsController.resetUserExpandedStates();
+            } else if (Intent.ACTION_SCREEN_CAMERA_GESTURE.equals(action)) {
+                boolean userSetupComplete = Settings.Secure.getInt(mContext.getContentResolver(),
+                        Settings.Secure.USER_SETUP_COMPLETE, 0) != 0;
+                if (!userSetupComplete) {
+                    if (DEBUG) Log.d(TAG, String.format(
+                            "userSetupComplete = %s, ignoring camera launch gesture.",
+                            userSetupComplete));
+                    return;
+                }
+
+                // This gets executed before we will show Keyguard, so post it in order that the
+                // state is correct.
+                mMainExecutor.execute(() -> mCommandQueueCallbacks.onCameraLaunchGestureDetected(
+                        StatusBarManager.CAMERA_LAUNCH_SOURCE_SCREEN_GESTURE));
             }
             Trace.endSection();
         }
