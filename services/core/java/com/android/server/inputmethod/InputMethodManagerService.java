@@ -176,6 +176,7 @@ import com.android.internal.inputmethod.SoftInputShowHideReason;
 import com.android.internal.inputmethod.StartInputFlags;
 import com.android.internal.inputmethod.StartInputReason;
 import com.android.internal.inputmethod.UnbindReason;
+import com.android.internal.lineage.hardware.LineageHardwareManager;
 import com.android.internal.os.TransferPipe;
 import com.android.internal.protolog.ProtoLog;
 import com.android.internal.util.ArrayUtils;
@@ -480,6 +481,8 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
             dumpDebug(proto, InputMethodManagerServiceTraceProto.INPUT_METHOD_MANAGER_SERVICE);
         }
     };
+
+    private LineageHardwareManager mLineageHardware;
 
     static class SessionState {
 
@@ -1430,6 +1433,9 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
                     newSettings.getEnabledInputMethodList());
         }
 
+        updateTouchHovering();
+        updateTouchSensitivity();
+
         ProtoLog.v(IMMS_DEBUG, "Switching user stage 3/3. newUserId=%s selectedIme=%s", newUserId,
                 newSettings.getSelectedInputMethod());
 
@@ -1484,6 +1490,13 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
             if (!mSystemReady) {
                 mSystemReady = true;
                 final int currentImeUserId = mCurrentImeUserId;
+
+                // Must happen before registerContentObserverLocked
+                mLineageHardware = LineageHardwareManager.getInstance(mContext);
+
+                updateTouchHovering();
+                updateTouchSensitivity();
+
                 mStatusBarManagerInternal =
                         LocalServices.getService(StatusBarManagerInternal.class);
                 hideStatusBarIconLocked(currentImeUserId);
@@ -3006,6 +3019,24 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
         userData.mSwitchingController.resetCircularListLocked(mContext, settings);
         userData.mHardwareKeyboardShortcutController.update(settings);
         sendOnNavButtonFlagsChangedLocked(userData);
+    }
+
+    private void updateTouchSensitivity() {
+        if (!mLineageHardware.isSupported(LineageHardwareManager.FEATURE_HIGH_TOUCH_SENSITIVITY)) {
+            return;
+        }
+        final boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HIGH_TOUCH_SENSITIVITY_ENABLE, 0) == 1;
+        mLineageHardware.set(LineageHardwareManager.FEATURE_HIGH_TOUCH_SENSITIVITY, enabled);
+    }
+
+    private void updateTouchHovering() {
+        if (!mLineageHardware.isSupported(LineageHardwareManager.FEATURE_TOUCH_HOVERING)) {
+            return;
+        }
+        final boolean enabled = Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.FEATURE_TOUCH_HOVERING, 0) == 1;
+        mLineageHardware.set(LineageHardwareManager.FEATURE_TOUCH_HOVERING, enabled);
     }
 
     @GuardedBy("ImfLock.class")
