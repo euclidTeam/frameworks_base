@@ -48,6 +48,7 @@ import android.view.View;
 
 import androidx.lifecycle.Observer;
 
+import com.android.systemui.Dependency;
 import com.android.systemui.res.R;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -107,6 +108,8 @@ public class PhoneStatusBarPolicy
 
     private static final String NETWORK_TRAFFIC_LOCATION =
             "system:" + Settings.System.NETWORK_TRAFFIC_LOCATION;
+    private static final String BLUETOOTH_SHOW_BATTERY =
+            "system:" + Settings.System.BLUETOOTH_SHOW_BATTERY;
 
     private final String mSlotCast;
     private final String mSlotHotspot;
@@ -171,6 +174,8 @@ public class PhoneStatusBarPolicy
 
 
     private boolean mShowNetworkTraffic;
+    private boolean mShowBluetoothBattery;
+    private boolean mHideBluetooth;
 
     @Inject
     public PhoneStatusBarPolicy(Context context, StatusBarIconController iconController,
@@ -249,6 +254,7 @@ public class PhoneStatusBarPolicy
 
         Dependency.get(TunerService.class).addTunable(this,
                 NETWORK_TRAFFIC_LOCATION,
+                BLUETOOTH_SHOW_BATTERY,
                 StatusBarIconController.ICON_HIDE_LIST);
     }
 
@@ -384,6 +390,10 @@ public class PhoneStatusBarPolicy
                 mShowNetworkTraffic =
                         TunerService.parseInteger(newValue, 0) == 1;
                 updateNetworkTraffic();
+            case BLUETOOTH_SHOW_BATTERY:
+                mShowBluetoothBattery =
+                        TunerService.parseIntegerSwitch(newValue, true);
+                updateBluetooth();
                 break;
             case StatusBarIconController.ICON_HIDE_LIST:
                 ArraySet<String> hideList = StatusBarIconController.getIconHideList(mContext, newValue);
@@ -511,14 +521,14 @@ public class PhoneStatusBarPolicy
                     && (mBluetooth.isBluetoothAudioActive()
                     || !mBluetooth.isBluetoothAudioProfileOnly())) {
                 bluetoothVisible = mBluetooth.isBluetoothEnabled();
-                batteryLevel = mBluetooth.getBatteryLevel();
+                batteryLevel = mShowBluetoothBattery ? mBluetooth.getBatteryLevel() : -1;
                 contentDescription = mResources.getString(
                         R.string.accessibility_bluetooth_connected);
             }
         }
 
         mIconController.setBluetoothIcon(mSlotBluetooth,
-                new BluetoothIconState(bluetoothVisible, batteryLevel, contentDescription));
+                new BluetoothIconState(!mHideBluetooth && bluetoothVisible, batteryLevel, contentDescription));
     }
 
     private final void updateNetworkTraffic() {
