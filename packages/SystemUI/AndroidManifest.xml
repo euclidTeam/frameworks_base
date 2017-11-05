@@ -212,6 +212,9 @@
     <!-- Access Quick Access Wallet cards -->
     <uses-permission android:name="android.permission.BIND_QUICK_ACCESS_WALLET_SERVICE" />
 
+    <!-- LiveDisplay -->
+    <uses-permission android:name="lineageos.permission.MANAGE_LIVEDISPLAY" />
+
     <!-- Adding Controls to SystemUI -->
     <uses-permission android:name="android.permission.BIND_CONTROLS" />
     <!-- Check foreground controls applications -->
