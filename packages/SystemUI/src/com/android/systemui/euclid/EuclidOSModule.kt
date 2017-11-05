@@ -26,11 +26,9 @@ import com.android.systemui.qs.tiles.DataSwitchTile
 import com.android.systemui.qs.tiles.DcDimmingTile
 import com.android.systemui.qs.tiles.HeadsUpTile
 import com.android.systemui.qs.tiles.PowerShareTile
-<<<<<<< HEAD
-import com.android.systemui.qs.tiles.PreferredNetworkTile
-=======
+import com.android.systemui.qs.tiles.LiveDisplayTile
 import com.android.systemui.qs.tiles.ScreenshotTile
->>>>>>> 4b8e32c14896 (SystemUI: Add Screenshot tile)
+import com.android.systemui.qs.tiles.PreferredNetworkTile
 import com.android.systemui.qs.tiles.SoundTile
 import com.android.systemui.qs.tiles.SoundSearchTile
 import com.android.systemui.qs.tiles.SyncTile
@@ -95,25 +93,29 @@ interface EuclidOSModule {
     @StringKey(HeadsUpTile.TILE_SPEC)
     fun bindHeadsUpTile(headsUpTile: HeadsUpTile): QSTileImpl<*>
 
+    /** Inject LiveDisplayTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(LiveDisplayTile.TILE_SPEC)
+    fun bindLiveDisplayTile(liveDisplayTile: LiveDisplayTile): QSTileImpl<*>
+
     /** Inject PowerShareTile into tileMap in QSModule */
     @Binds
     @IntoMap
     @StringKey(PowerShareTile.TILE_SPEC)
     fun bindPowerShareTile(powerShareTile: PowerShareTile): QSTileImpl<*>
 
-<<<<<<< HEAD
     /** Inject PreferredNetworkTile into tileMap in QSModule */
     @Binds
     @IntoMap
     @StringKey(PreferredNetworkTile.TILE_SPEC)
     fun bindPreferredNetworkTile(preferredNetworkTile: PreferredNetworkTile): QSTileImpl<*>
-=======
+
     /** Inject ScreenshotTile into tileMap in QSModule */
     @Binds
     @IntoMap
     @StringKey(ScreenshotTile.TILE_SPEC)
     fun bindScreenshotTile(screenshotTile: ScreenshotTile): QSTileImpl<*>
->>>>>>> 4b8e32c14896 (SystemUI: Add Screenshot tile)
 
     /** Inject SoundTile into tileMap in QSModule */
     @Binds
