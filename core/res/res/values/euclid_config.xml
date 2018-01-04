@@ -230,4 +230,8 @@
          plugged in. -->
     <string name="config_usbFunctionActivity" translatable="false"
             >com.android.systemui/com.android.systemui.usb.UsbFunctionActivity</string>
+
+    <!-- Whether the device supports Smart Pixels -->
+    <bool name="config_supportSmartPixels">false</bool>
+
 </resources>
