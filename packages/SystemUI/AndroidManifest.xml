@@ -214,6 +214,7 @@
 
     <!-- LiveDisplay -->
     <uses-permission android:name="lineageos.permission.MANAGE_LIVEDISPLAY" />
+    <uses-permission android:name="lineageos.permission.HARDWARE_ABSTRACTION_ACCESS" />
 
     <!-- Adding Controls to SystemUI -->
     <uses-permission android:name="android.permission.BIND_CONTROLS" />
