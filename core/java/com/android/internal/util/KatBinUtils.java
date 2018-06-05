@@ -26,17 +26,17 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Helper functions for uploading to Memochō (https://bin.kv2.dev/).
+ * Helper functions for uploading to KatBin (https://katb.in).
  */
-public final class MemochoUtils {
+public final class KatBinUtils {
 
-    private static final String binUrl = "https://bin.kv2.dev";
+    private static final String binUrl = "https://katb.in";
     private static Handler mHandler;
 
     /**
-     * Uploads {@code content} to Memochō
+     * Uploads {@code content} to KatBin
      *
-     * @param content  the content to upload to Memochō
+     * @param content  the content to upload to KatBin
      * @param callback the callback to call on success / failure
      */
     public static void upload(String content, UploadResultCallback callback) {
@@ -61,12 +61,12 @@ public final class MemochoUtils {
                 if (!urlPath.isEmpty()) {
                     callback.onSuccess(binUrl + urlPath);
                 } else {
-                    String msg = "Failed to upload to Memochō: No id retrieved";
+                    String msg = "Failed to upload to KatBin: No id retrieved";
                     callback.onFail(msg, new Exception(msg));
                 }
                 urlConnection.disconnect();
             } catch (Exception e) {
-                String msg = "Failed to upload to Memochō";
+                String msg = "Failed to upload to KatBin";
                 callback.onFail(msg, e);
             }
         });
@@ -74,11 +74,11 @@ public final class MemochoUtils {
 
     private static Handler getHandler() {
         if (mHandler == null) {
-            HandlerThread memochoThread = new HandlerThread("MemochoThread");
-            if (!memochoThread.isAlive()) {
-                memochoThread.start();
+            HandlerThread katBinThread = new HandlerThread("KatBinThread");
+            if (!katBinThread.isAlive()) {
+                katBinThread.start();
             }
-            mHandler = new Handler(memochoThread.getLooper());
+            mHandler = new Handler(katBinThread.getLooper());
         }
         return mHandler;
     }
