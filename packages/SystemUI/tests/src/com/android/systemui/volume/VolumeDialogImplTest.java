@@ -79,6 +79,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.DevicePostureController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.FakeConfigurationController;
+import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.settings.FakeSettings;
 import com.android.systemui.util.settings.SecureSettings;
 import com.android.systemui.util.time.FakeSystemClock;
@@ -131,6 +132,8 @@ public class VolumeDialogImplTest extends SysuiTestCase {
     DeviceProvisionedController mDeviceProvisionedController;
     @Mock
     MediaOutputDialogFactory mMediaOutputDialogFactory;
+    @Mock
+    TunerService mTunerService;
     @Mock
     InteractionJankMonitor mInteractionJankMonitor;
     @Mock
@@ -207,7 +210,8 @@ public class VolumeDialogImplTest extends SysuiTestCase {
                 mDumpManager,
                 mLazySecureSettings,
                 mVibratorHelper,
-                new FakeSystemClock());
+                new FakeSystemClock(),
+                mTunerService);
         mDialog.init(0, null);
         State state = createShellState();
         mDialog.onStateChangedH(state);
