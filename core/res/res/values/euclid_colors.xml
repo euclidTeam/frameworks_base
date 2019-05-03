@@ -4,7 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
     <!-- Pocket Mode -->
     <style name="PocketModeTitle">
         <item name="android:textSize">@dimen/pocket_mode_title_size</item>
@@ -23,5 +22,4 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:alpha">0.5</item>
     </style>
-
 </resources>

@@ -4,7 +4,6 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
     <!-- Pocket Mode -->
     <dimen name="pocket_mode_illustration_width">175dp</dimen>
     <dimen name="pocket_mode_illustration_height">350dp</dimen>
