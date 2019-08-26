@@ -1112,6 +1112,9 @@ final class DefaultPermissionGrantPolicy {
         grantSystemFixedPermissionsToSystemPackage(pm,
                 getDefaultProviderAuthorityPackage("com.google.android.flipendo", userId),
                 userId, SUSPEND_APP_PERMISSIONS);
+
+        // Google Markup
+        grantSystemFixedPermissionsToSystemPackage(pm,"com.google.android.markup", userId, STORAGE_PERMISSIONS);
     }
 
     private String getDefaultSystemHandlerActivityPackageForCategory(PackageManagerWrapper pm,
