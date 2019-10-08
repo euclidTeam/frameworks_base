@@ -168,6 +168,7 @@ android_library {
         "androidx.compose.animation_animation-graphics",
         "vendor.lineage.powershare-V1.0-java",
         "bcsmartspace-google",
+        "FadingEdgeLayoutLib",
     ],
     libs: [
         "keepanno-annotations",
