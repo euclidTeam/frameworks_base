@@ -175,6 +175,7 @@ import android.service.dreams.IDreamManager;
 import android.service.vr.IPersistentVrStateCallbacks;
 import android.speech.RecognizerIntent;
 import android.telecom.TelecomManager;
+import android.text.TextUtils;
 import android.util.FeatureFlagUtils;
 import android.util.Log;
 import android.util.MathUtils;
@@ -470,6 +471,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mHasFeatureWatch;
     private boolean mHasFeatureLeanback;
     private boolean mHasFeatureHdmiCec;
+
+    // Double-tap-to-doze
+    private boolean mDoubleTapToWake;
+    private boolean mDoubleTapToDoze;
+    private boolean mNativeDoubleTapToDozeAvailable;
 
     // Assigned on main thread, accessed on UI thread
     volatile VrManagerInternal mVrManagerInternal;
@@ -942,6 +948,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_ENABLE_POWER_MENU), true, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOZE_TRIGGER_DOUBLETAP), false, this,
                     UserHandle.USER_ALL);
             updateSettings();
         }
@@ -2291,6 +2300,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mWakeOnBackKeyPress =
                 res.getBoolean(com.android.internal.R.bool.config_wakeOnBackKeyPress);
 
+        // Double-tap-to-doze
+        mNativeDoubleTapToDozeAvailable = !TextUtils.isEmpty(
+                mContext.getResources().getString(R.string.config_dozeDoubleTapSensorType));
+
         // Init display burn-in protection
         boolean burnInProtectionEnabled = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_enableBurnInProtection);
@@ -2982,6 +2995,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }    
         ContentResolver resolver = mContext.getContentResolver();
         boolean updateRotation = false;
+
+                // Double-tap-to-doze
+        mDoubleTapToWake = Settings.Secure.getInt(resolver,
+                Settings.Secure.DOUBLE_TAP_TO_WAKE, 0) == 1;
+        mDoubleTapToDoze = Settings.System.getInt(resolver,
+                Settings.System.DOZE_TRIGGER_DOUBLETAP, 0) == 1;
 
         int mDeviceHardwareWakeKeys = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_deviceHardwareWakeKeys);
@@ -5073,7 +5092,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             case KeyEvent.KEYCODE_WAKEUP: {
                 logKeyboardSystemsEventOnActionUp(event, KeyboardLogEvent.WAKEUP);
                 result &= ~ACTION_PASS_TO_USER;
-                isWakeKey = true;
+                // Double-tap-to-doze
+                if (mDoubleTapToWake && mDoubleTapToDoze && !mNativeDoubleTapToDozeAvailable) {
+                    isWakeKey = false;
+                    if (!down) {
+                        mContext.sendBroadcast(new Intent("com.android.systemui.doze.pulse"));
+                    }
+                } else {
+                    isWakeKey = true;
+                }
                 break;
             }
 
