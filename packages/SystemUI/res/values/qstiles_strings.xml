@@ -16,7 +16,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="quick_settings_extra_tiles" translatable="false">
-        caffeine,heads_up,sync,usb_tether,vpn
+        caffeine,heads_up,sync,usb_tether,vpn,dataswitch
     </string>
 
     <!-- Caffeine QS tile -->
@@ -45,4 +45,7 @@
     <string name="vpn_credentials_username">Username</string>
     <string name="vpn_credentials_password">Password</string>
     <string name="vpn_credentials_dialog_connect">Connect</string>
+
+    <!-- DataSwitch Tile -->
+    <string name="qs_data_switch_label">Switch data card</string>
 </resources>
