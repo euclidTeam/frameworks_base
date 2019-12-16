@@ -6290,6 +6290,32 @@ public final class Settings {
          */
         public static final String QS_FOOTER_DATA_USAGE = "qs_footer_data_usage";
 
+	/**
+         * Whether to blink flashlight for incoming calls
+         * 0 = Disabled (Default)
+         * 1 = Blink flashlight only in Ringer mode
+         * 2 = Blink flashlight only when ringer is not audible
+         * 3 = Blink flahslight only when entirely silent
+         * 4 = Blink flashlight always regardless of ringer mode
+         * @hide
+         */
+        @Readable
+        public static final String FLASHLIGHT_ON_CALL = "flashlight_on_call";
+
+	/**
+         * Whether flashlight_on_call ignores DND (Zen Mode)
+         * @hide
+         */
+        @Readable
+        public static final String FLASHLIGHT_ON_CALL_IGNORE_DND = "flashlight_on_call_ignore_dnd";
+
+        /**
+         * Rate in Hz in which to blink flashlight_on_call
+         * @hide
+         */
+        @Readable
+        public static final String FLASHLIGHT_ON_CALL_RATE = "flashlight_on_call_rate";
+
         /**
          * Which Vibration Pattern to use
          * 0: dzzz-dzzz
@@ -6476,6 +6502,9 @@ public final class Settings {
             PRIVATE_SETTINGS.add(VIBRATE_ON_CONNECT);
             PRIVATE_SETTINGS.add(VIBRATE_ON_CALLWAITING);
             PRIVATE_SETTINGS.add(VIBRATE_ON_DISCONNECT);
+            PRIVATE_SETTINGS.add(FLASHLIGHT_ON_CALL);
+            PRIVATE_SETTINGS.add(FLASHLIGHT_ON_CALL_IGNORE_DND);
+            PRIVATE_SETTINGS.add(FLASHLIGHT_ON_CALL_RATE);
         }
 
         /**
