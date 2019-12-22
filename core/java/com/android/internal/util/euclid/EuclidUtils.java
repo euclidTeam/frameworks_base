@@ -28,6 +28,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.content.om.IOverlayManager;
+import android.content.om.OverlayInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -55,6 +57,8 @@ import android.graphics.Color;
 import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.os.PowerManager;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -106,6 +110,8 @@ public class EuclidUtils {
     private static final boolean DEBUG = false;
 
     private static final int NO_CUTOUT = -1;
+
+    private static OverlayManager mOverlayService;
 
     public static boolean isChineseLanguage() {
        return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
@@ -488,5 +494,41 @@ public class EuclidUtils {
             }
         }
         return NO_CUTOUT;
+    }
+
+    // Method to detect whether an overlay is enabled or not
+    public static boolean isThemeEnabled(String packageName) {
+        mOverlayService = new OverlayManager();
+        try {
+            List<OverlayInfo> infos = mOverlayService.getOverlayInfosForTarget("android",
+                    UserHandle.myUserId());
+            for (int i = 0, size = infos.size(); i < size; i++) {
+                if (infos.get(i).packageName.equals(packageName)) {
+                    return infos.get(i).isEnabled();
+                }
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static class OverlayManager {
+        private final IOverlayManager mService;
+
+        public OverlayManager() {
+            mService = IOverlayManager.Stub.asInterface(
+                    ServiceManager.getService(Context.OVERLAY_SERVICE));
+        }
+
+        public void setEnabled(String pkg, boolean enabled, int userId)
+                throws RemoteException {
+            mService.setEnabled(pkg, enabled, userId);
+        }
+
+        public List<OverlayInfo> getOverlayInfosForTarget(String target, int userId)
+                throws RemoteException {
+            return mService.getOverlayInfosForTarget(target, userId);
+        }
     }
 }
