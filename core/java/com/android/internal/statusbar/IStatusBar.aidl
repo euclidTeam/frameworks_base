@@ -389,4 +389,6 @@ oneway interface IStatusBar
 
     /** StagOS additions. */
     void toggleCameraFlash();
+
+    void killForegroundApp();
 }
