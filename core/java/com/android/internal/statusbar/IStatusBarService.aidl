@@ -249,5 +249,7 @@ interface IStatusBarService
     /** euclidOS additions. */
     void toggleCameraFlash();
 
+    void killForegroundApp();
+
     void screenPinningStateChanged(boolean enabled);
 }
