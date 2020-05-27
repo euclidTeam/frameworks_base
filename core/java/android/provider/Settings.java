@@ -6690,6 +6690,11 @@ public final class Settings {
          */
 
         /**
+         * @hide
+         */
+        public static final String SCREENSHOT_SHUTTER_SOUND = "screenshot_shutter_sound";
+
+        /**
          * Whether the torch launch gesture when the screen is off should be enabled.
          * @hide
          */
