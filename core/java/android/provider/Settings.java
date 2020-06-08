@@ -7000,6 +7000,17 @@ public final class Settings {
         @Readable
         public static final String SENSOR_BLOCK = "sensor_block";
 
+         /**
+         * Sensor blocked packages
+         * @hide
+         */
+        @Readable
+        public static final String SENSOR_BLOCKED_APP = "sensor_blocked_app";
+
+         /** @hide */
+        @Readable
+        public static final String SENSOR_BLOCKED_APP_DUMMY = "sensor_blocked_app_dummy";
+
         /**
          * Launch custom activity when using the long left back swipe app action
          *
