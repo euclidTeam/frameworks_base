@@ -54,4 +54,8 @@
      <!-- HD calling icon -->
      <dimen name="signal_icon_viewport_size">24dp</dimen>
 
+     <!-- Additional gesture navbar lengths -->
+     <dimen name="navigation_home_handle_width_short">72dp</dimen>
+     <dimen name="navigation_home_handle_width_long">140dp</dimen>
+
 </resources>
