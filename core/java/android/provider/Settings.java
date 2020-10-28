@@ -6293,6 +6293,13 @@ public final class Settings {
         @Readable
         public static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
         
+
+       /**
+         * Whether or not volume button music controls should be enabled to seek media tracks
+         * @hide
+         */
+        public static final String VOLBTN_MUSIC_CONTROLS = "volbtn_music_controls";
+
         /**
          * Whether to answer the call with the volume keys, the value is boolean.
          * 0 = 0ff, 1 = on
