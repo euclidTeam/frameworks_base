@@ -251,10 +251,6 @@ public class EuclidUtils {
         return ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
-    public static void toggleCameraFlash() {
-        FireActions.toggleCameraFlash();
-    }
-
     public static void sendKeycode(int keycode) {
         long when = SystemClock.uptimeMillis();
         final KeyEvent evDown = new KeyEvent(when, when, KeyEvent.ACTION_DOWN, keycode, 0,
@@ -280,10 +276,10 @@ public class EuclidUtils {
         }, 20);
     }
 
-    /**
-     * Keep FireAction methods below this point.
-     * Place calls to methods above this point.
-     */
+    public static void toggleCameraFlash() {
+        FireActions.toggleCameraFlash();
+    }
+
     private static final class FireActions {
         private static IStatusBarService mStatusBarService = null;
         private static IStatusBarService getStatusBarService() {
@@ -297,15 +293,15 @@ public class EuclidUtils {
         }
 
         public static void toggleCameraFlash() {
-            IStatusBarService service = getStatusBarService();
-            if (service != null) {
-                try {
-                    service.toggleCameraFlash();
-                } catch (RemoteException e) {
-                    // do nothing.
-                }
-            }
-        }
+             IStatusBarService service = getStatusBarService();
+             if (service != null) {
+                 try {
+                     service.toggleCameraFlash();
+                 } catch (RemoteException e) {
+                     // do nothing.
+                 }
+             }
+         }
     }
 
     // Check if device has a notch
