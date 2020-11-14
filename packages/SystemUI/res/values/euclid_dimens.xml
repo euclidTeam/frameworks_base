@@ -57,4 +57,7 @@
      <dimen name="custom_notification_row_padding">16dp</dimen>
      <dimen name="custom_qs_tile_label_line_height">20sp</dimen>
 
+     <!-- Screen Record -->
+     <dimen name="screenrecord_dot_size">48dp</dimen>
+
 </resources>
