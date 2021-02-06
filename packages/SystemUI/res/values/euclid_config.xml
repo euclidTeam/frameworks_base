@@ -68,4 +68,7 @@
          DOZE_AOD_PAUSED to DOZE_AOD state. -->
     <bool name="config_displayTurnsOnWhenResumingAod">false</bool>
 
+    <!-- If not zero, limits the internal screen recorder's framerate to the set value. -->
+    <integer name="config_screenRecorderMaxFramerate">0</integer>
+
 </resources>
