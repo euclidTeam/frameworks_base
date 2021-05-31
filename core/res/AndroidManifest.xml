@@ -855,6 +855,8 @@
     <protected-broadcast android:name="android.service.ondeviceintelligence.MODEL_UNLOADED" />
     <protected-broadcast android:name="android.telephony.satellite.action.SATELLITE_START_NON_EMERGENCY_SESSION" />
 
+    <!-- Sleep Mode -->
+    <protected-broadcast android:name="android.intent.action.SLEEP_MODE_TURN_OFF" />
 
     <!-- ====================================================================== -->
     <!--                          RUNTIME PERMISSIONS                           -->
