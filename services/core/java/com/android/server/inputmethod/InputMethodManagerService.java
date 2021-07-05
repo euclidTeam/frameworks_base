@@ -1117,6 +1117,12 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
                     STYLUS_HANDWRITING_ENABLED), false, this);
 
             if (mLineageHardware.isSupported(
+                    LineageHardwareManager.FEATURE_HIGH_TOUCH_POLLING_RATE)) {
+                resolver.registerContentObserver(Settings.System.getUriFor(
+                        Settings.System.HIGH_TOUCH_POLLING_RATE_ENABLE),
+                        false, this, userId);
+            }
+            if (mLineageHardware.isSupported(
                     LineageHardwareManager.FEATURE_HIGH_TOUCH_SENSITIVITY)) {
                 resolver.registerContentObserver(Settings.System.getUriFor(
                         Settings.System.HIGH_TOUCH_SENSITIVITY_ENABLE),
@@ -1136,6 +1142,8 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
                     Settings.Secure.ACCESSIBILITY_SOFT_KEYBOARD_MODE);
             final Uri stylusHandwritingEnabledUri = Settings.Secure.getUriFor(
                     STYLUS_HANDWRITING_ENABLED);
+            final Uri highTouchPollingRateUri = Settings.System.getUriFor(
+                    Settings.System.HIGH_TOUCH_POLLING_RATE_ENABLE);
             final Uri touchSensitivityUri = Settings.System.getUriFor(
                     Settings.System.HIGH_TOUCH_SENSITIVITY_ENABLE);
             final Uri touchHoveringUri = Settings.Secure.getUriFor(
@@ -1158,6 +1166,8 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
                     }
                 } else if (stylusHandwritingEnabledUri.equals(uri)) {
                     InputMethodManager.invalidateLocalStylusHandwritingAvailabilityCaches();
+                } else if (highTouchPollingRateUri.equals(uri)) {
+                    updateTouchPollingRate();
                 } else if (touchSensitivityUri.equals(uri)) {
                     updateTouchSensitivity();
                 } else if (touchHoveringUri.equals(uri)) {
@@ -1885,6 +1895,7 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
         }
 
         updateTouchHovering();
+        updateTouchPollingRate();
         updateTouchSensitivity();
 
         if (DEBUG) {
@@ -1919,6 +1930,7 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
                 mLineageHardware = LineageHardwareManager.getInstance(mContext);
 
                 updateTouchHovering();
+                updateTouchPollingRate();
                 updateTouchSensitivity();
 
                 mStatusBarManagerInternal =
@@ -3322,6 +3334,15 @@ public final class InputMethodManagerService extends IInputMethodManager.Stub
                     mSettings.getMethodMap(), mSettings.getUserId());
         }
         sendOnNavButtonFlagsChangedLocked();
+    }
+
+    private void updateTouchPollingRate() {
+        if (!mLineageHardware.isSupported(LineageHardwareManager.FEATURE_HIGH_TOUCH_POLLING_RATE)) {
+            return;
+        }
+        final boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HIGH_TOUCH_POLLING_RATE_ENABLE, 0) == 1;
+        mLineageHardware.set(LineageHardwareManager.FEATURE_HIGH_TOUCH_POLLING_RATE, enabled);
     }
 
     private void updateTouchSensitivity() {
