@@ -19,4 +19,7 @@
 
     <!-- Whether device supports in-display fingerprint -->
     <java-symbol type="bool" name="config_supportsUdfps" />
+
+    <!-- Whether to cleanup fingerprints upon connection to the daemon and when user switches -->
+    <java-symbol type="bool" name="config_cleanupUnusedFingerprints" />
 </resources>
