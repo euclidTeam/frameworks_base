@@ -6950,6 +6950,16 @@ public final class Settings {
         public static final String SECURE_LOCKSCREEN_QS_DISABLED = "secure_lockscreen_qs_disabled";
 
         /**
+         * @hide
+         */
+        public static final String UDFPS_ANIM = "udfps_anim";
+
+        /**
+         * @hide
+         */
+        public static final String UDFPS_ANIM_STYLE = "udfps_anim_style";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_ALARM}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
