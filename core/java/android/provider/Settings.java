@@ -6955,6 +6955,11 @@ public final class Settings {
         public static final String UDFPS_ANIM_STYLE = "udfps_anim_style";
 
         /**
+         * @hide
+         */
+        public static final String UDFPS_ICON = "udfps_icon";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_ALARM}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
