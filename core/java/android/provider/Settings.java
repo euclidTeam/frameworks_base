@@ -6784,6 +6784,12 @@ public final class Settings {
         public static final String GLOBAL_ACTIONS_DEVICE_CONTROLS = "global_actions_device_controls";
 
         /**
+         * Whether to disable qs on secure lockscreen.
+         * @hide
+         */
+        public static final String SECURE_LOCKSCREEN_QS_DISABLED = "secure_lockscreen_qs_disabled";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_ALARM}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
