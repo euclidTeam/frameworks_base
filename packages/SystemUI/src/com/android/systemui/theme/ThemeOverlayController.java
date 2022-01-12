@@ -534,6 +534,27 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 },
                 UserHandle.USER_ALL);
 
+        mSecureSettings.registerContentObserverForUser(
+                Settings.Secure.getUriFor(Settings.Secure.SYSTEM_BLACK_THEME),
+                false,
+                new ContentObserver(mBgHandler) {
+                    @Override
+                    public void onChange(boolean selfChange, Collection<Uri> collection, int flags,
+                            int userId) {
+                        if (DEBUG) Log.d(TAG, "Overlay changed for user: " + userId);
+                        if (mUserTracker.getUserId() != userId) {
+                            return;
+                        }
+                        if (!mDeviceProvisionedController.isUserSetup(userId)) {
+                            Log.i(TAG, "Theme application deferred when setting changed.");
+                            mDeferredThemeEvaluation = true;
+                            return;
+                        }
+                        reevaluateSystemTheme(true /* forceReload */);
+                    }
+                },
+                UserHandle.USER_ALL);
+
         mSystemSettings.registerContentObserverForUser(
                 Settings.System.getUriFor(Settings.System.STATUS_BAR_BATTERY_STYLE),
                 false,
@@ -660,7 +681,9 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 }
             });
         }
+        mConfigurationController.addCallback(mConfigurationListener);
     }
+
 
     protected void reevaluateSystemTheme(boolean forceReload) {
         final WallpaperColors currentColors = mCurrentColors.get(mUserTracker.getUserId());
@@ -922,6 +945,15 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 && mDynamicOverlay != null) {
             categoryToPackage.put(OVERLAY_CATEGORY_DYNAMIC_COLOR, mDynamicOverlay.getIdentifier());
         }
+
+        boolean isBlackTheme = Settings.Secure.getIntForUser(
+                mContext.getContentResolver(), Settings.Secure.SYSTEM_BLACK_THEME,
+                0, currentUser) == 1 && isNightMode();
+        if (categoryToPackage.containsKey(OVERLAY_CATEGORY_SYSTEM_PALETTE) && isBlackTheme) {
+            OverlayIdentifier blackTheme = new OverlayIdentifier(mThemeManager.OVERLAY_BLACK_THEME);
+            categoryToPackage.put(OVERLAY_CATEGORY_SYSTEM_PALETTE, blackTheme);
+        }
+        mThemeManager.applyBlackTheme(isBlackTheme);
 
         Set<UserHandle> managedProfiles = new HashSet<>();
         for (UserInfo userInfo : mUserManager.getEnabledProfiles(currentUser)) {
