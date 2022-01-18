@@ -286,6 +286,8 @@ import com.android.server.uri.UriGrantsManagerInternal;
 import com.android.server.wallpaper.WallpaperManagerInternal;
 import com.android.wm.shell.Flags;
 
+import com.android.internal.util.euclid.cutout.CutoutFullscreenController;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -804,6 +806,8 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
     private int mDeviceOwnerUid = Process.INVALID_UID;
 
     private Set<Integer> mProfileOwnerUids = new ArraySet<Integer>();
+
+    private CutoutFullscreenController mCutoutFullscreenController;
 
     private final class SettingObserver extends ContentObserver {
         private final Uri mFontScaleUri = Settings.System.getUriFor(FONT_SCALE);
@@ -7312,5 +7316,11 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
 
     static boolean isPip2ExperimentEnabled() {
         return Flags.enablePip2Implementation();
+    }
+
+    public boolean shouldForceCutoutFullscreen(String packageName) {
+        synchronized (mGlobalLock) {
+            return mCutoutFullscreenController.shouldForceCutoutFullscreen(packageName);
+        }
     }
 }
