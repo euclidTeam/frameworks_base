@@ -59,6 +59,7 @@ import android.os.UserManager;
 import android.util.Slog;
 import android.util.proto.ProtoOutputStream;
 
+import com.android.internal.R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.server.biometrics.AuthenticationStatsBroadcastReceiver;
 import com.android.server.biometrics.AuthenticationStatsCollector;
@@ -141,6 +142,8 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
     private final AuthSessionCoordinator mAuthSessionCoordinator;
     @Nullable private AuthenticationStatsCollector mAuthenticationStatsCollector;
 
+    private final boolean mCleanupEnabled;
+
     private final class BiometricTaskStackListener extends TaskStackListener {
         @Override
         public void onTaskStackChanged() {
@@ -217,6 +220,9 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
         initAuthenticationBroadcastReceiver();
         initSensors(resetLockoutRequiresHardwareAuthToken, props, gestureAvailabilityDispatcher);
     }
+
+    mCleanupEnabled = mContext.getResources().getBoolean(
+                R.bool.config_cleanupUnusedFingerprints);
 
     private void initAuthenticationBroadcastReceiver() {
         new AuthenticationStatsBroadcastReceiver(
@@ -737,6 +743,9 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
     @Override
     public void scheduleInternalCleanup(int sensorId, int userId,
             @Nullable ClientMonitorCallback callback, boolean favorHalEnrollments) {
+        if (!mCleanupEnabled) {
+            return;
+        }
         mHandler.post(() -> {
             final FingerprintInternalCleanupClient client =
                     new FingerprintInternalCleanupClient(mContext,
