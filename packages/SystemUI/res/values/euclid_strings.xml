@@ -62,6 +62,9 @@
      <!-- Status bar - icons -->
      <string name="status_bar_icons_title">Status bar icons</string>
 
+     <!-- Name of the roaming status bar icon. -->
+     <string name="status_bar_roaming">Roaming indicator</string>
+
      <!-- Weather -->
      <string name="weather_condition_clouds">Cloudy</string>
      <string name="weather_condition_rain">Rainy</string>
