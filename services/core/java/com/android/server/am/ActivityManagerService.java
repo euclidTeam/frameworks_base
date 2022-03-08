@@ -1730,6 +1730,7 @@ public class ActivityManagerService extends IActivityManager.Stub
 
     final SwipeToScreenshotObserver mSwipeToScreenshotObserver;
     private boolean mIsSwipeToScreenshotEnabled;
+    private boolean mIsSwipeToScreenshotActive;
 
     /**
      * Used to notify activity lifecycle events.
@@ -20714,8 +20715,11 @@ public class ActivityManagerService extends IActivityManager.Stub
 
     @Override
     public boolean isSwipeToScreenshotGestureActive() {
-        synchronized (this) {
-            return mIsSwipeToScreenshotEnabled && SystemProperties.getBoolean("sys.android.screenshot", false);
-        }
+        return mIsSwipeToScreenshotEnabled && mIsSwipeToScreenshotActive;
+    }
+
+    @Override
+    public void setSwipeToScreenshotGestureActive(boolean enabled) {
+        mIsSwipeToScreenshotActive = enabled;
     }
 }
