@@ -5,7 +5,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- Name of the nfc status bar icon. -->
+    <!-- Statusbar Icons -->
+    <string name="status_bar_data_saver">Data saver</string>
     <string name="status_bar_nfc">NFC</string>
 
     <!-- Status bar - icons -->
