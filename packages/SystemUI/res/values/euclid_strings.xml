@@ -54,7 +54,8 @@
      <string name="tristate_rotation_90">Landscape (90°)</string>
      <string name="tristate_rotation_270">Landscape (270°)</string>
 
-     <!-- Name of the nfc status bar icon. -->
+     <!-- Statusbar Icons -->
+     <string name="status_bar_data_saver">Data saver</string>
      <string name="status_bar_nfc">NFC</string>
 
      <!-- Status bar - icons -->
