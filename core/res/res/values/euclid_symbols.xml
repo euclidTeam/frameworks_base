@@ -29,4 +29,7 @@
     <!-- SystemUI Restart -->
     <java-symbol type="string" name="systemui_restart_title" />
     <java-symbol type="string" name="systemui_restart_message" />
+
+    <!-- Whether to allow network traffic on statusbar -->
+    <java-symbol type="bool" name="config_supportsNetworkTrafficOnStatusBar" />
 </resources>
