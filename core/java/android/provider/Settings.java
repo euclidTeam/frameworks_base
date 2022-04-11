@@ -6201,6 +6201,11 @@ public final class Settings {
          * the setting value. See an example above.
          */
 
+	/**
+         * @hide
+         */
+        public static final String ENABLE_TASKBAR = "enable_taskbar";
+
         /**
          * Swipe to screenshot
          * @hide
