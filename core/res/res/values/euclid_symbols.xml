@@ -138,4 +138,7 @@
 
     <!-- Display color inversion availability -->
     <java-symbol type="bool" name="config_displayInversionAvailable" />
+
+    <!-- Lock gesture -->
+    <java-symbol type="string" name="gesture_locked_warning" />
 </resources>

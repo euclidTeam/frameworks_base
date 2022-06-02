@@ -6412,6 +6412,12 @@ public final class Settings {
         public static final String QS_PANEL_TILE_HAPTIC = "qs_panel_tile_haptic";
 
         /**
+         * Current status of whether gestures are locked
+         * @hide
+         */
+        public static final String LOCK_GESTURE_STATUS = "lock_gesture_status";
+
+        /**
          * These are all public system settings
          *
          * @hide
