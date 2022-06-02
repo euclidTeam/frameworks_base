@@ -194,4 +194,7 @@
     <java-symbol type="anim" name="last_app_in" />
     <java-symbol type="anim" name="last_app_out" />
     <java-symbol type="string" name="app_killed_message" />
+
+    <!-- Lock gesture -->
+    <java-symbol type="string" name="gesture_locked_warning" />
 </resources>
