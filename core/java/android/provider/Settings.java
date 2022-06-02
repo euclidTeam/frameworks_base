@@ -6686,6 +6686,12 @@ public final class Settings {
          */
         public static final String RECENTS_LOCKED_TASKS = "recents_locked_tasks";
 
+	/**
+         * Current status of whether gestures are locked
+         * @hide
+         */
+        public static final String LOCK_GESTURE_STATUS = "lock_gesture_status";
+
         /**
          * Whether to display sound panel in the power menu
          * @hide
