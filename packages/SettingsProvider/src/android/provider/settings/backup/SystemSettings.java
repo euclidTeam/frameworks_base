@@ -117,7 +117,8 @@ public class SystemSettings {
                 Settings.System.NOTIFICATION_COOLDOWN_VIBRATE_UNLOCKED,
                 Settings.System.MAX_CALL_VOLUME,
                 Settings.System.MAX_MUSIC_VOLUME,
-                Settings.System.MAX_ALARM_VOLUME
+                Settings.System.MAX_ALARM_VOLUME,
+                Settings.System.NAVIGATION_BAR_IME_SPACE
         ));
         if (Flags.backUpSmoothDisplayAndForcePeakRefreshRate()) {
             settings.add(Settings.System.PEAK_REFRESH_RATE);
