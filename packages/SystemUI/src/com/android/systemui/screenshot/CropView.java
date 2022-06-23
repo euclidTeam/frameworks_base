@@ -247,6 +247,10 @@ public class CropView extends View {
      */
     public void setBoundaryPosition(CropBoundary boundary, float position) {
         Log.i(TAG, "setBoundaryPosition: " + boundary + ", position=" + position);
+        if (boundary == CropBoundary.NONE) {
+            return;
+        }
+
         position = (float) getAllowedValues(boundary).clamp(position);
         switch (boundary) {
             case TOP:
@@ -361,6 +365,11 @@ public class CropView extends View {
         float lower = 1f;
         switch (boundary) {
             case TOP:
+                if (mCurrentDraggingBoundary == CropBoundary.MIDDLE) {
+                    // When the current dragging boundary is the middle, do not let the user move
+                    // the selection past the bottom edge.
+                    return new Range<>(0f, 1f - (mCrop.bottom - mCrop.top));
+                }
                 lower = 0f;
                 upper = mCrop.bottom - pixelDistanceToFraction(mCropTouchMargin,
                         CropBoundary.BOTTOM);
@@ -370,6 +379,11 @@ public class CropView extends View {
                 upper = 1;
                 break;
             case LEFT:
+                if (mCurrentDraggingBoundary == CropBoundary.MIDDLE) {
+                    // When the current dragging boundary is the middle, do not let the user move
+                    // the selection past the right edge.
+                    return new Range<>(0f, 1f - (mCrop.right - mCrop.left));
+                }
                 lower = 0f;
                 upper = mCrop.right - pixelDistanceToFraction(mCropTouchMargin, CropBoundary.RIGHT);
                 break;
