@@ -68,4 +68,7 @@
     <integer name="qs_panel_num_columns">2</integer>
     <integer name="qs_panel_num_columns_landscape">4</integer>
     <integer name="qs_panel_num_columns_media">2</integer>
+
+    <!-- Doze: does the double tap sensor need a proximity check? -->
+    <bool name="doze_double_tap_proximity_check">false</bool>
 </resources>
