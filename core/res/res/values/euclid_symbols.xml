@@ -126,4 +126,7 @@
     <!-- Defines the actions shown in advanced reboot submenu -->
     <java-symbol type="array" name="config_restartActionsList" />
 
- </resources>
+    <!-- Whether to cancel fingerprint operation if not idle -->
+    <java-symbol type="bool" name="config_fpCancelIfNotIdle" />
+
+</resources>
