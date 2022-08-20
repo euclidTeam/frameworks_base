@@ -21,4 +21,7 @@
     <string name="reboot_to_bootloader_message">Rebooting to bootloader</string>
     <string name="reboot_title">Reboot</string>
     <string name="reboot_message">Rebooting system</string>
+
+    <!-- Parallel space badge -->
+    <string name="parallel_space_badge_label">%1$s</string>
 </resources>
