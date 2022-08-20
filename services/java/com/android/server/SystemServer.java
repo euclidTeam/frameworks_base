@@ -232,6 +232,7 @@ import com.android.server.webkit.WebViewUpdateService;
 import com.android.server.wm.ActivityTaskManagerService;
 import com.android.server.wm.WindowManagerGlobalLock;
 import com.android.server.wm.WindowManagerService;
+import com.android.server.euclid.ParallelSpaceManagerService;
 
 import dalvik.system.VMRuntime;
 
@@ -430,6 +431,9 @@ public final class SystemServer implements Dumpable {
             "com.android.server.compat.overrides.AppCompatOverridesService$Lifecycle";
     private static final String HEALTHCONNECT_MANAGER_SERVICE_CLASS =
             "com.android.server.healthconnect.HealthConnectManagerService";
+    private static final String PARALLEL_SPACE_SERVICE_CLASS =
+            "com.android.server.euclid.ParallelSpaceManagerService";
+
     private static final String ROLE_SERVICE_CLASS = "com.android.role.RoleService";
     private static final String GAME_MANAGER_SERVICE_CLASS =
             "com.android.server.app.GameManagerService$Lifecycle";
@@ -2967,6 +2971,10 @@ public final class SystemServer implements Dumpable {
 
         t.traceBegin("HealthConnectManagerService");
         mSystemServiceManager.startService(HEALTHCONNECT_MANAGER_SERVICE_CLASS);
+        t.traceEnd();
+
+        t.traceBegin("StartParallelSpaceManagerService");
+        mSystemServiceManager.startService(PARALLEL_SPACE_SERVICE_CLASS);
         t.traceEnd();
 
         if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_DEVICE_LOCK)) {

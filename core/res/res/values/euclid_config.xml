@@ -56,4 +56,7 @@
     <!-- Default values for status bar DT2S gesture -->
     <bool name="config_dt2sGestureAvailable">true</bool>
     <bool name="config_dt2sGestureEnabledByDefault">true</bool>
+
+    <!-- Parallel space max count. Should overlay according to device performance. -->
+    <integer name="config_parallelSpaceMaxCount">9</integer>
 </resources>
