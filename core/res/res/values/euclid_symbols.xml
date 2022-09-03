@@ -86,6 +86,9 @@
     <!-- For dynamic default font styles -->
     <java-symbol type="string" name="config_bodyFontFamily" />
 
+    <!-- Cycle through ringer modes -->
+    <java-symbol type="string" name="volume_dialog_ringer_guidance_normal" />
+
     <!-- Alert Slider -->
     <java-symbol type="string" name="alert_slider_state_path" />
     <java-symbol type="string" name="alert_slider_uevent_match_path" />
