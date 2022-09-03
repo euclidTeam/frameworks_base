@@ -11,4 +11,7 @@
 
     <!-- Parallel space badge -->
     <string name="parallel_space_badge_label">%1$s</string>
+
+    <!-- Cycle through ringer modes -->
+    <string name="volume_dialog_ringer_guidance_normal">Calls and notifications will ring</string>
 </resources>
