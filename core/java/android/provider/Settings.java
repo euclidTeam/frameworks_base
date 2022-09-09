@@ -6742,6 +6742,12 @@ public final class Settings {
         public static final String LOCK_GESTURE_STATUS = "lock_gesture_status";
 
         /**
+         * Charging symbol near battery text percentage
+         * @hide
+         */
+        public static final String TEXT_CHARGING_SYMBOL = "text_charging_symbol";
+
+        /**
          * These are all public system settings
          *
          * @hide
