@@ -25,7 +25,7 @@ import com.android.systemui.statusbar.pipeline.icons.shared.model.ModernStatusBa
 
 /** Wraps [com.android.internal.statusbar.StatusBarIcon] so we can still have a uniform list */
 open class StatusBarIconHolder private constructor() {
-    @IntDef(TYPE_ICON, TYPE_MOBILE_NEW, TYPE_WIFI_NEW, TYPE_BINDABLE)
+    @IntDef(TYPE_ICON, TYPE_MOBILE_NEW, TYPE_WIFI_NEW, TYPE_BINDABLE, TYPE_BLUETOOTH)
     @Retention(AnnotationRetention.SOURCE)
     internal annotation class IconType
 
@@ -99,6 +99,15 @@ open class StatusBarIconHolder private constructor() {
 
         /** Only applicable to [BindableIconHolder] */
         const val TYPE_BINDABLE = 5
+
+        const val TYPE_BLUETOOTH = 6
+
+        @JvmStatic
+        fun fromBluetoothIconState(): StatusBarIconHolder {
+            val holder = StatusBarIconHolder()
+            holder.mType = TYPE_BLUETOOTH
+            return holder
+        }
 
         /** Returns a human-readable string representing the given type. */
         fun getTypeString(@IconType type: Int): String {
