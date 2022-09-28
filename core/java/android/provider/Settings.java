@@ -6645,6 +6645,12 @@ public final class Settings {
         public static final String FACE_LOCKOUT = "face_lockout";
 
         /**
+         * Enable/Disable fingerprint lockout
+         * @hide
+         */
+        public static final String FINGERPRINT_LOCKOUT = "fingerprint_lockout";
+
+        /**
          * When to use Wi-Fi calling
          *
          * @see android.telephony.TelephonyManager.WifiCallingChoices
