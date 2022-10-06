@@ -479,4 +479,8 @@ cc_library_shared {
         "libnativehelper",
         "libvintf",
     ],
+
+    lto: {
+        thin: true,
+    },
 }
