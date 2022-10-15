@@ -14,4 +14,8 @@
      <java-symbol type="integer" name="config_proximityCheckTimeout" />
      <java-symbol type="bool" name="config_proximityCheckOnWakeEnabledByDefault" />
 
+     <!-- ATV remote custom keys handling -->
+     <java-symbol type="array" name="keyhandler_keycodes" />
+     <java-symbol type="array" name="keyhandler_packages" />
+
 </resources>
