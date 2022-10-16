@@ -41,7 +41,7 @@ import com.android.systemui.qs.tiles.VpnTile
 import com.android.systemui.qs.tiles.VolumeTile
 import com.android.systemui.qs.tiles.WifiTile
 import com.android.systemui.qs.tiles.ReadingModeTile
-
+import com.android.systemui.qs.tiles.WeatherTile
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -127,6 +127,12 @@ interface EuclidOSModule {
     @IntoMap
     @StringKey(PowerShareTile.TILE_SPEC)
     fun bindPowerShareTile(powerShareTile: PowerShareTile): QSTileImpl<*>
+
+    /** Inject WeatherTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(WeatherTile.TILE_SPEC)
+    fun bindWeatherTile(weatherTile: WeatherTile): QSTileImpl<*>
 
     /** Inject ReadingModeTile into tileMap in QSModule */
     @Binds
