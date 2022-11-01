@@ -39,8 +39,6 @@ public class CutoutFullscreenController {
 
     private final boolean isAvailable;
 
-    private static final String PKG_GOOGLE_DIALER = "com.google.android.dialer";
-
     public CutoutFullscreenController(Context context) {
         mContext = context;
         final Resources resources = mContext.getResources();
@@ -63,7 +61,10 @@ resources.getString(com.android.internal.R.string.config_mainBuiltInDisplayCutou
     }
 
     public boolean shouldForceCutoutFullscreen(String packageName) {
-        return isSupported() && (mApps.contains(packageName) || packageName.equals(PKG_GOOGLE_DIALER));
+        return isSupported() && (mApps.contains(packageName) 
+        	|| packageName.contains("dialer")
+        	|| packageName.contains("android.settings")
+        	);
     }
 
     public Set<String> getApps() {
