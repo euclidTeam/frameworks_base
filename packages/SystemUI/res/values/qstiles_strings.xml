@@ -16,7 +16,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="quick_settings_extra_tiles" translatable="false">
-        caffeine,heads_up,sync,usb_tether,wifi,cell,vpn,dataswitch,sound,compass,aod,ambient_display,powershare,soundsearch,dc_dimming,volume_panel
+        caffeine,heads_up,sync,usb_tether,wifi,cell,vpn,dataswitch,sound,compass,aod,ambient_display,powershare,soundsearch,dc_dimming,volume_panel,screenshot
     </string>
 
     <!-- Ambient display QS tile -->
@@ -100,4 +100,7 @@
 
     <!-- Volume panel QS tile -->
     <string name="quick_settings_volume_panel_label">Volume panel</string>
+
+    <!-- Screenshot Tile -->
+    <string name="screenshot_long_press">Long press - selected region</string>
 </resources>
