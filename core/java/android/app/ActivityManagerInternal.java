@@ -1265,4 +1265,9 @@ public abstract class ActivityManagerInternal {
      * @hide
      */
     public abstract boolean isThemeOverlayReady(int userId);
+
+    public abstract boolean queryActivityAllowed(ComponentName resolvedActivity, Intent intent, int callerUid,
+        int callerPid, String resolvedType, ApplicationInfo resolvedApp);
+    public abstract boolean queryServiceAllowed(ComponentName resolvedService, Intent intent, int callerUid,
+        int callerPid, String resolvedType, ApplicationInfo resolvedApp);
 }
