@@ -80,4 +80,8 @@
 
     <!-- Whether device supports an alt. ambient display -->
     <java-symbol type="bool" name="config_alt_ambient_display"/>
+
+    <!-- Title & summary of notification letting users know that battery saver is now on -->
+    <java-symbol type="string" name="battery_saver_on_notification_title" />
+    <java-symbol type="string" name="battery_saver_on_notification_summary" />
 </resources>
