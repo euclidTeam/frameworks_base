@@ -84,4 +84,7 @@
      <dimen name="opa_line_x_trans_ry">15dp</dimen>
      <dimen name="opa_line_y_translation">16dp</dimen>
 
+     <!-- QS A11 Style -->
+     <dimen name="custom_qs_panel_padding_top">0dp</dimen>
+
 </resources>
