@@ -6660,6 +6660,12 @@ public final class Settings {
         public static final String VOLUME_SLIDER_HAPTICS_INTENSITY = "volume_slider_haptics_intensity";
 
         /**
+         * Enable and Disable Dual Tone Colors QsPanel
+         * @hide
+         */
+        public static final String QS_DUAL_TONE = "qs_dual_tone";
+
+        /**
          * These are all public system settings
          *
          * @hide
