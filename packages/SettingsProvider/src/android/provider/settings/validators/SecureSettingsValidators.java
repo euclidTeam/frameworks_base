@@ -34,6 +34,7 @@ import static android.provider.settings.validators.SettingsValidators.NULLABLE_C
 import static android.provider.settings.validators.SettingsValidators.PACKAGE_NAME_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.PERCENTAGE_INTEGER_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.TILE_LIST_VALIDATOR;
+import static android.provider.settings.validators.SettingsValidators.TIME_RANGE_VALIDATOR;
 import static android.provider.settings.validators.SettingsValidators.TTS_LIST_VALIDATOR;
 
 import android.provider.Settings.Secure;
@@ -425,5 +426,7 @@ public class SecureSettingsValidators {
         VALIDATORS.put(Secure.FEATURE_TOUCH_HOVERING, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.SWAP_CAPACITIVE_KEYS, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.DOZE_ON_CHARGE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Secure.EXTRA_DIM_AUTO_MODE, new DiscreteValueValidator(new String[] {"0", "1", "2", "3", "4"}));
+        VALIDATORS.put(Secure.EXTRA_DIM_AUTO_TIME, TIME_RANGE_VALIDATOR);
     }
 }

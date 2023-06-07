@@ -269,5 +269,7 @@ public class SecureSettings {
         Settings.Secure.CAMERA_EXTENSIONS_FALLBACK,
         Settings.Secure.VISUAL_QUERY_ACCESSIBILITY_DETECTION_ENABLED,
         Settings.Secure.DOZE_ON_CHARGE,
+        Settings.Secure.EXTRA_DIM_AUTO_MODE,
+        Settings.Secure.EXTRA_DIM_AUTO_TIME,
     };
 }
