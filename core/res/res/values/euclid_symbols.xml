@@ -61,4 +61,8 @@
 
     <!-- Cycle through ringer modes -->
     <java-symbol type="string" name="volume_dialog_ringer_guidance_normal" />
+
+    <!-- Status bar DT2S gesture -->
+    <java-symbol type="bool" name="config_dt2sGestureAvailable" />
+    <java-symbol type="bool" name="config_dt2sGestureEnabledByDefault" />
 </resources>
