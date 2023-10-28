@@ -6098,11 +6098,6 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String UDFPS_ANIM = "udfps_anim";
-
-        /**
-         * @hide
-         */
         public static final String UDFPS_ANIM_STYLE = "udfps_anim_style";
 
         /**
