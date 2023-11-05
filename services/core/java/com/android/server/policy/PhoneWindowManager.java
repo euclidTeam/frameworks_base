@@ -1344,7 +1344,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Global.putInt(mContext.getContentResolver(),
                             Settings.Global.THEATER_MODE_ON, 0);
                     if (!interactive) {
-                        wakeUpFromWakeKey(eventTime, KEYCODE_POWER, /* isDown= */ false);
+                        wakeUpFromWakeKey(eventTime, KEYCODE_POWER, /* isDown= */ false, /*proximityCheck= */ false);
                     }
                 } else {
                     Slog.i(TAG, "Toggling theater mode on.");
@@ -1360,7 +1360,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             case MULTI_PRESS_POWER_BRIGHTNESS_BOOST:
                 Slog.i(TAG, "Starting brightness boost.");
                 if (!interactive) {
-                    wakeUpFromWakeKey(eventTime, KEYCODE_POWER, /* isDown= */ false);
+                    wakeUpFromWakeKey(eventTime, KEYCODE_POWER, /* isDown= */ false, /*proximityCheck= */ false);
                 }
                 mPowerManager.boostScreenBrightness(eventTime);
                 break;
@@ -5230,7 +5230,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
 
         if (isWakeKey) {
-            wakeUpFromWakeKey(event);
+            wakeUpFromWakeKey(event, event.getKeyCode() == KeyEvent.KEYCODE_WAKEUP);
         }
 
         // If the key event is targeted to a specific display, then the user is interacting with
@@ -5746,13 +5746,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private void wakeUpFromWakeKey(KeyEvent event) {
-        wakeUpFromWakeKey(
+                wakeUpFromWakeKey(event, false);
+                }
+    private void wakeUpFromWakeKey(KeyEvent event, boolean withProximity) {
+                wakeUpFromWakeKey(
                 event.getEventTime(),
                 event.getKeyCode(),
-                event.getAction() == KeyEvent.ACTION_DOWN);
+                event.getAction() == KeyEvent.ACTION_DOWN, withProximity);
     }
 
-    private void wakeUpFromWakeKey(long eventTime, int keyCode, boolean isDown) {
+    private void wakeUpFromWakeKey(long eventTime, int keyCode, boolean isDown, boolean withProximity) {
         if (mWindowWakeUpPolicy.wakeUpFromKey(eventTime, keyCode, isDown)) {
             final boolean keyCanLaunchHome = keyCode == KEYCODE_HOME || keyCode == KEYCODE_POWER;
             // Start HOME with "reason" extra if sleeping for more than mWakeUpToLastStateTimeout
