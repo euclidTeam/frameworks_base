@@ -84,4 +84,7 @@
 
     <!-- Parallel space max count. -->
     <java-symbol type="integer" name="config_parallelSpaceMaxCount" />
+
+    <!-- Enforce DisplayModeDirector to select user preferred resolution -->
+    <java-symbol type="bool" name="config_forceToUseSelectedResolution" />
 </resources>
