@@ -6627,6 +6627,11 @@ public final class Settings {
         public static final String LOCKSCREEN_WEATHER_LOCATION = "lockscreen_weather_location";
 
         /**
+         * @hide
+         */
+        public static final String LOCKSCREEN_WEATHER_TEXT = "lockscreen_weather_text";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_VOICE_CALL}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
