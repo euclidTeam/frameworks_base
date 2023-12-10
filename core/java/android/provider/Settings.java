@@ -6749,6 +6749,16 @@ public final class Settings {
         public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
 
         /**
+         * @hide
+         */
+        public static final String QQS_LAYOUT_ROWS_LANDSCAPE = "qqs_layout_rows_landscape";
+
+        /**
+         * @hide
+         */
+        public static final String QQS_LAYOUT_ROWS = "qqs_layout_rows";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_VOICE_CALL}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
