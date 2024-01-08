@@ -98,15 +98,15 @@
                         android:paddingEnd="@dimen/status_bar_left_clock_end_padding"
                         android:gravity="center_vertical|start"
                     />
+                    
+                    <include layout="@layout/ongoing_call_chip" />
 
                     <com.android.systemui.statusbar.AlphaOptimizedFrameLayout
                         android:id="@+id/notification_icon_area"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-                        android:clipChildren="false"/>
-
-                    <include layout="@layout/ongoing_call_chip" />
+                        android:clipChildren="false"/>                    
 
                 </LinearLayout>
             </FrameLayout>
