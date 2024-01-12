@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2019-2023 crDroid Android Project
+ * Copyright (C) 2019-2024 crDroid Android Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -321,6 +321,49 @@ public class NetworkTraffic extends TextView implements TunerService.Tunable {
         };
     }
 
+    // Network tracking related variables
+    private NetworkRequest mRequest = new NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
+            .build();
+
+    private ConnectivityManager.NetworkCallback mNetworkCallback =
+            new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onLinkPropertiesChanged(Network network,
+                        LinkProperties linkProperties) {
+                    if (mTrafficHandler != null) {
+                        Message msg = new Message();
+                        msg.what = MESSAGE_TYPE_ADD_NETWORK;
+                        msg.obj = new LinkPropertiesHolder(network, linkProperties);
+                        mTrafficHandler.sendMessage(msg);
+                    }
+                }
+
+                @Override
+                public void onLost(Network network) {
+                    if (mTrafficHandler != null) {
+                        Message msg = new Message();
+                        msg.what = MESSAGE_TYPE_REMOVE_NETWORK;
+                        msg.obj = network;
+                        mTrafficHandler.sendMessage(msg);
+                    }
+                }
+            };
+
+    private ConnectivityManager.NetworkCallback mDefaultNetworkCallback =
+            new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(Network network) {
+            updateViews();
+        }
+
+        @Override
+        public void onLost(Network network) {
+            updateViews();
+        }
+    };
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -336,49 +379,8 @@ public class NetworkTraffic extends TextView implements TunerService.Tunable {
             tunerService.addTunable(this, NETWORK_TRAFFIC_REFRESH_INTERVAL);
             tunerService.addTunable(this, NETWORK_TRAFFIC_HIDEARROW);
 
-            // Network tracking related variables
-            final NetworkRequest request = new NetworkRequest.Builder()
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
-                    .build();
-            ConnectivityManager.NetworkCallback networkCallback =
-                    new ConnectivityManager.NetworkCallback() {
-                        @Override
-                        public void onLinkPropertiesChanged(Network network,
-                                LinkProperties linkProperties) {
-                            Message msg = new Message();
-                            msg.what = MESSAGE_TYPE_ADD_NETWORK;
-                            msg.obj = new LinkPropertiesHolder(network, linkProperties);
-                            mTrafficHandler.sendMessage(msg);
-                        }
-
-                        @Override
-                        public void onLost(Network network) {
-                            Message msg = new Message();
-                            msg.what = MESSAGE_TYPE_REMOVE_NETWORK;
-                            msg.obj = network;
-                            mTrafficHandler.sendMessage(msg);
-                        }
-                    };
-            ConnectivityManager.NetworkCallback defaultNetworkCallback =
-                    new ConnectivityManager.NetworkCallback() {
-                @Override
-                public void onAvailable(Network network) {
-                    updateViews();
-                }
-
-                @Override
-                public void onLost(Network network) {
-                    updateViews();
-                }
-            };
-
-            try {
-                mConnectivityManager.registerNetworkCallback(request, networkCallback);
-                mConnectivityManager.registerDefaultNetworkCallback(defaultNetworkCallback);
-            } catch (Exception e) {
-                // Do nothing
-            }
+            mConnectivityManager.registerNetworkCallback(mRequest, mNetworkCallback);
+            mConnectivityManager.registerDefaultNetworkCallback(mDefaultNetworkCallback);
 
             mConnectionAvailable = mConnectivityManager.getActiveNetworkInfo() != null;
 
@@ -396,6 +398,7 @@ public class NetworkTraffic extends TextView implements TunerService.Tunable {
         if (mAttached) {
             clearHandlerCallbacks();
             mContext.unregisterReceiver(mIntentReceiver);
+            mConnectivityManager.unregisterNetworkCallback(mNetworkCallback);
             Dependency.get(TunerService.class).removeTunable(this);
             mAttached = false;
         }
