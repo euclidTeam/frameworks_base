@@ -52,7 +52,6 @@ interface MobileIconViewModelCommon {
     val icon: Flow<SignalIconModel>
     val contentDescription: Flow<MobileContentDescription?>
     val roaming: Flow<Boolean>
-    val isRoamingVisible: Flow<Boolean>
     /** The RAT icon (LTE, 3G, 5G, etc) to be displayed. Null if we shouldn't show anything */
     val networkTypeIcon: Flow<Icon.Resource?>
     /** The slice attribution. Drawn as a background layer */
@@ -61,6 +60,7 @@ interface MobileIconViewModelCommon {
     val activityOutVisible: Flow<Boolean>
     val activityContainerVisible: Flow<Boolean>
     val networkSpeedIcon: Flow<NetworkSpeedIcon>
+    val showHd: Flow<Boolean>
 }
 
 /**
@@ -150,6 +150,8 @@ class MobileIconViewModel(
 
     override val networkSpeedIcon: Flow<NetworkSpeedIcon> =
         vmProvider.flatMapLatest { it.networkSpeedIcon }
+
+    override val showHd: Flow<Boolean> = vmProvider.flatMapLatest { it.showHd }
 }
 
 /** Representation of this network when it is non-terrestrial (e.g., satellite) */
@@ -176,6 +178,7 @@ private class CarrierBasedSatelliteViewModelImpl(
     override val activityOutVisible: Flow<Boolean> = flowOf(false)
     override val activityContainerVisible: Flow<Boolean> = flowOf(false)
     override val networkSpeedIcon: Flow<NetworkSpeedIcon> = flowOf(NetworkSpeedIcon.Disabled)
+    override val showHd: Flow<Boolean> = flowOf(false)
 }
 
 /** Terrestrial (cellular) icon. */
@@ -312,18 +315,6 @@ private class CellularIconViewModel(
             )
             .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 
-    override val isRoamingVisible: StateFlow<Boolean> =
-        combine(
-                roaming,
-                iconInteractor.isRoamingForceHidden
-            ) { isRoaming, isHidden ->
-                // If it's force hidden, just hide.
-                // Otherwise follow roaming state
-                isRoaming && !isHidden
-            }
-            .distinctUntilChanged()
-            .stateIn(scope, SharingStarted.WhileSubscribed(), false)
-
     private val activity: Flow<DataActivityModel?> =
         if (!constants.shouldShowActivityConfig) {
             flowOf(null)
@@ -354,4 +345,29 @@ private class CellularIconViewModel(
             // Show network speed only when mobile data is active (type icon is visible)
             typeIcon?.let { networkSpeedViewModel.icon } ?: flowOf(NetworkSpeedIcon.Disabled)
         }
+
+    private val showVoWifi: StateFlow<Boolean> =
+        combine(
+                iconInteractor.isVoWifi,
+                iconInteractor.isVoWifiForceHidden
+            ) { isVoWifi, isHidden ->
+                // If it's force hidden, just hide.
+                // Otherwise follow VoWifi state
+                isVoWifi && !isHidden
+            }
+            .distinctUntilChanged()
+            .stateIn(scope, SharingStarted.WhileSubscribed(), false)
+
+    override val showHd: StateFlow<Boolean> =
+        combine(
+                iconInteractor.isMobileHd,
+                iconInteractor.isMobileHdForceHidden,
+                showVoWifi,
+            ) { isHd, isHidden, voWifi ->
+                // If it's force hidden or VoWifi available, just hide.
+                // Otherwise follow HD state
+                isHd && !(isHidden || voWifi)
+            }
+            .distinctUntilChanged()
+            .stateIn(scope, SharingStarted.WhileSubscribed(), false)
 }

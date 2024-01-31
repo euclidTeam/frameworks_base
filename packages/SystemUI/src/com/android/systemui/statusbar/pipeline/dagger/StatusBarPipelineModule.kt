@@ -33,6 +33,8 @@ import com.android.systemui.statusbar.pipeline.airplane.ui.viewmodel.AirplaneMod
 import com.android.systemui.statusbar.pipeline.airplane.ui.viewmodel.AirplaneModeViewModelImpl
 import com.android.systemui.statusbar.pipeline.icons.shared.BindableIconsRegistry
 import com.android.systemui.statusbar.pipeline.icons.shared.BindableIconsRegistryImpl
+import com.android.systemui.statusbar.pipeline.ims.data.repository.CommonImsRepository
+import com.android.systemui.statusbar.pipeline.ims.data.repository.CommonImsRepositoryImpl
 import com.android.systemui.statusbar.pipeline.mobile.data.repository.CarrierConfigCoreStartable
 import com.android.systemui.statusbar.pipeline.mobile.data.repository.CarrierConfigRepository
 import com.android.systemui.statusbar.pipeline.mobile.data.repository.CarrierConfigRepositoryImpl
@@ -185,6 +187,9 @@ abstract class StatusBarPipelineModule {
 
     @Binds
     abstract fun networkSpeedViewModel(impl: NetworkSpeedViewModelImpl): NetworkSpeedViewModel
+
+    @Binds
+    abstract fun bindCommonImsRepository(impl: CommonImsRepositoryImpl): CommonImsRepository
 
     companion object {
 
