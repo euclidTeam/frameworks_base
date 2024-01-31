@@ -71,6 +71,7 @@ import com.android.systemui.coroutines.collectLastValue
 import com.android.systemui.flags.FakeFeatureFlagsClassic
 import com.android.systemui.flags.Flags.ROAMING_INDICATOR_VIA_DISPLAY_INFO
 import com.android.systemui.log.table.TableLogBuffer
+import com.android.systemui.statusbar.pipeline.ims.data.repository.ImsRepositoryImpl
 import com.android.systemui.statusbar.pipeline.mobile.data.MobileInputLogger
 import com.android.systemui.statusbar.pipeline.mobile.data.model.DataConnectionState
 import com.android.systemui.statusbar.pipeline.mobile.data.model.NetworkNameModel
@@ -124,6 +125,7 @@ class MobileConnectionRepositoryTest : SysuiTestCase() {
     @Mock private lateinit var logger: MobileInputLogger
     @Mock private lateinit var tableLogger: TableLogBuffer
     @Mock private lateinit var context: Context
+    private val imsRepo = mock<ImsRepositoryImpl>()
 
     private val mobileMappings = FakeMobileMappingsProxy()
     private val systemUiCarrierConfig =
@@ -168,6 +170,7 @@ class MobileConnectionRepositoryTest : SysuiTestCase() {
                 tableLogger,
                 flags,
                 testScope.backgroundScope,
+                imsRepo
             )
     }
 
@@ -642,6 +645,7 @@ class MobileConnectionRepositoryTest : SysuiTestCase() {
                     tableLogger,
                     flags,
                     testScope.backgroundScope,
+                    imsRepo,
                 )
 
             var latest: Boolean? = null
@@ -691,6 +695,7 @@ class MobileConnectionRepositoryTest : SysuiTestCase() {
                     tableLogger,
                     flags,
                     testScope.backgroundScope,
+                    imsRepo,
                 )
 
             var latest: Boolean? = null
