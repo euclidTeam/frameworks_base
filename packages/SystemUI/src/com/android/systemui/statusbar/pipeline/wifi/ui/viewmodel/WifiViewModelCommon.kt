@@ -17,6 +17,7 @@
 package com.android.systemui.statusbar.pipeline.wifi.ui.viewmodel
 
 import com.android.systemui.statusbar.pipeline.netspeed.ui.model.NetworkSpeedIcon
+import com.android.systemui.statusbar.pipeline.wifi.ui.model.VoWifiIcon
 import com.android.systemui.statusbar.pipeline.wifi.ui.model.WifiIcon
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,4 +47,7 @@ interface WifiViewModelCommon {
 
     /** The network speed indicator that should be displayed. */
     val networkSpeedIcon: Flow<NetworkSpeedIcon>
+
+    /** The VoWifi icon that should be displayed. */
+    val voWifiIcon: Flow<VoWifiIcon>
 }
