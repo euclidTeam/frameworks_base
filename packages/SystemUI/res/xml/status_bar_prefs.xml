@@ -120,6 +120,18 @@
         android:title="@string/status_bar_nfc"
         android:icon="@drawable/ic_statusbar_nfc" />
 
+    <com.android.systemui.tuner.TunerSwitch
+        android:icon="@drawable/ic_statusbar_hd_calling"
+        android:key="status_bar_show_hd_calling"
+        android:title="@string/status_bar_hd_calling"
+        sysui:defValue="false" />
+
+    <com.android.systemui.tuner.TunerSwitch
+        android:icon="@drawable/ic_statusbar_vowifi"
+        android:key="status_bar_show_vowifi"
+        android:title="@string/status_bar_vowifi"
+        sysui:defValue="false" />
+
     <com.android.systemui.tuner.BatteryPreference
         android:title="@string/battery"
         android:icon="@*android:drawable/ic_battery"
