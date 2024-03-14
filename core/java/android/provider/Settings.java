@@ -12382,7 +12382,7 @@ public final class Settings {
          * Whether or not to vibrate when back gesture is used
          * @hide
          */
-        public static final String BACK_GESTURE_HAPTIC = "back_gesture_haptic";
+        public static final String BACK_GESTURE_HAPTIC_INTENSITY = "back_gesture_haptic_intensity";
 
         /**
          * Keys we no longer back up under the current schema, but want to continue to

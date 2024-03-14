@@ -49,6 +49,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sign
 
+import com.android.internal.util.android.VibrationUtils
+
 private const val TAG = "BackPanelController"
 private const val ENABLE_FAILSAFE = true
 private const val FAILSAFE_DELAY_MS = 350L
@@ -183,7 +185,7 @@ internal constructor(
 
     private var backArrowVisibility = false
 
-    private var edgeHapticEnabled = false
+    private var edgeHapticIntensity = 0
 
     internal enum class GestureState {
         /* Arrow is off the screen and invisible */
@@ -674,8 +676,8 @@ internal constructor(
         backArrowVisibility = enabled
     }
 
-    override fun setEdgeHapticEnabled(enabled: Boolean) {
-        edgeHapticEnabled = enabled
+    override fun setEdgeHapticIntensity(intensity: Int) {
+        edgeHapticIntensity = intensity
     }
 
     private fun isFlungAwayFromEdge(endX: Float, startX: Float = touchDeltaStartX): Boolean {
@@ -930,7 +932,7 @@ internal constructor(
             GestureState.ACTIVE -> {
                 previousXTranslationOnActiveOffset = previousXTranslation
                 updateRestingArrowDimens()
-                if (edgeHapticEnabled) performActivatedHapticFeedback()
+                if (edgeHapticIntensity > 0) VibrationUtils.triggerVibration(context, edgeHapticIntensity)
                 val popVelocity =
                     if (previousState == GestureState.INACTIVE) {
                         POP_ON_INACTIVE_TO_ACTIVE_VELOCITY
@@ -951,15 +953,15 @@ internal constructor(
 
                 mView.popOffEdge(POP_ON_INACTIVE_VELOCITY)
 
-                if (edgeHapticEnabled) performDeactivatedHapticFeedback()
+                if (edgeHapticIntensity > 0) VibrationUtils.triggerVibration(context, edgeHapticIntensity)
                 updateRestingArrowDimens()
             }
             GestureState.FLUNG -> {
                 // Typically a vibration is only played while transitioning to ACTIVE. However there
                 // are instances where a fling to trigger back occurs while not in that state.
                 // (e.g. A fling is detected before crossing the trigger threshold.)
-                if (edgeHapticEnabled && (previousState != GestureState.ACTIVE)) {
-                    performActivatedHapticFeedback()
+                if (edgeHapticIntensity > 0 && (previousState != GestureState.ACTIVE)) {
+                    VibrationUtils.triggerVibration(context, edgeHapticIntensity)
                 }
                 mainHandler.postDelayed(POP_ON_FLING_DELAY) {
                     mView.popScale(POP_ON_FLING_VELOCITY)
