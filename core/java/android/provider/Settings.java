@@ -6424,6 +6424,11 @@ public final class Settings {
         public static final String EDGE_SCROLLING_HAPTICS_INTENSITY = "edge_scrolling_haptics_intensity";
 
         /**
+         * @hide
+         */
+        public static final String VOLUME_SLIDER_HAPTICS_INTENSITY = "volume_slider_haptics_intensity";
+
+        /**
          * These are all public system settings
          *
          * @hide
