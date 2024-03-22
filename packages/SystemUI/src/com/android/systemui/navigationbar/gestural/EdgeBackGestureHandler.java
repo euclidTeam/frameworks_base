@@ -1472,7 +1472,7 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
                 EuclidUtils.switchScreenOff(mContext);
                 break;
             case 7: // Screenshot
-                EuclidUtils.takeScreenshot(true);
+                EuclidUtils.takeScreenshot();
                 break;
             case 8: // Notification panel
                 EuclidUtils.toggleNotifications();
