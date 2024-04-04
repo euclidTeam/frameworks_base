@@ -106,6 +106,7 @@ import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
 import com.android.systemui.res.R;
 import com.android.systemui.screenshot.TakeScreenshotService.RequestCallback;
+import com.android.systemui.settings.DisplayTracker;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.TaskStackChangeListeners;
 import com.android.systemui.util.Assert;
@@ -285,6 +286,7 @@ public class ScreenshotController {
     private final ScrollCaptureClient mScrollCaptureClient;
     private final PhoneWindow mWindow;
     private final DisplayManager mDisplayManager;
+    private final DisplayTracker mDisplayTracker;
     private final int mDisplayId;
     private final ScrollCaptureController mScrollCaptureController;
     private final IStatusBarService mStatusBarService;
@@ -401,6 +403,7 @@ public class ScreenshotController {
             UserManager userManager,
             AssistContentRequester assistContentRequester,
             MessageContainerController messageContainerController,
+            DisplayTracker displayTracker,
             Provider<ScreenshotSoundController> screenshotSoundController,
             @Assisted int displayId,
             @Assisted boolean showUIOnExternalDisplay
@@ -431,6 +434,7 @@ public class ScreenshotController {
 
         mDisplayId = displayId;
         mDisplayManager = requireNonNull(context.getSystemService(DisplayManager.class));
+        mDisplayTracker = displayTracker;
         final Context displayContext = context.createDisplayContext(getDisplay());
         mContext = (WindowContext) displayContext.createWindowContext(TYPE_SCREENSHOT, null);
         mWindowManager = mContext.getSystemService(WindowManager.class);
