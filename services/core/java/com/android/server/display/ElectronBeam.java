@@ -146,6 +146,12 @@ final class ElectronBeam implements ScreenStateAnimator {
         mDisplayManagerInternal = LocalServices.getService(DisplayManagerInternal.class);
     }
 
+    @Override
+    public void destroy() {
+        // Implementation of the destroy method specific to ElectronBeam
+        // You need to provide the actual implementation here
+    }
+
     /**
      * Warms up the electron beam in preparation for turning on or off.
      * This method prepares a GL context, and captures a screen shot.

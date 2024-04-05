@@ -37,4 +37,7 @@ public interface ScreenStateAnimator {
     public boolean draw(float level);
 
     public void dump(PrintWriter pw);
+
+    // Add the destroy method
+    public void destroy();
 }
