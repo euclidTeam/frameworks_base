@@ -60,6 +60,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -363,9 +364,9 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
     private @DevicePostureController.DevicePostureInt int mDevicePosture;
     private int mOrientation;
     private final Lazy<SecureSettings> mSecureSettings;
-    private int mDialogTimeoutMillis;
     private final VibratorHelper mVibratorHelper;
     private final com.android.systemui.util.time.SystemClock mSystemClock;
+    private int mDialogTimeoutMillis = DIALOG_TIMEOUT_MILLIS;
 
     // Variable to track the default row with which the panel is initially shown
     private VolumeRow mDefaultRow = null;
@@ -421,7 +422,6 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         mVolumePanelNavigationInteractor = volumePanelNavigationInteractor;
         mVolumeNavigator = volumeNavigator;
         mSecureSettings = secureSettings;
-        mDialogTimeoutMillis = DIALOG_TIMEOUT_MILLIS;
 
         dumpManager.registerDumpable("VolumeDialogImpl", this);
 
@@ -440,6 +440,18 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         if (!mShowActiveStreamOnly) {
             mTunerService.addTunable(mTunable, VOLUME_PANEL_ON_LEFT);
         }
+
+        ContentObserver volumeTimeoutObserver = new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                mDialogTimeoutMillis = mSecureSettings.get().getInt(
+                        Settings.Secure.VOLUME_DIALOG_DISMISS_TIMEOUT, DIALOG_TIMEOUT_MILLIS);
+            }
+        };
+        mContext.getContentResolver().registerContentObserver(
+                Settings.Secure.getUriFor(Settings.Secure.VOLUME_DIALOG_DISMISS_TIMEOUT),
+                false, volumeTimeoutObserver);
+        volumeTimeoutObserver.onChange(true);
 
         initDimens();
 
@@ -649,8 +661,6 @@ public class VolumeDialogImpl implements VolumeDialog, Dumpable,
         mDialog.setContentView(R.layout.volume_dialog);
         mDialogView = mDialog.findViewById(R.id.volume_dialog);
         mDialogView.setAlpha(0);
-        mDialogTimeoutMillis = mSecureSettings.get().getInt(
-                Settings.Secure.VOLUME_DIALOG_DISMISS_TIMEOUT, DIALOG_TIMEOUT_MILLIS);
         mDialogView.setLayoutDirection(
                 (mOriginalGravity == 19) ? LAYOUT_DIRECTION_LTR : LAYOUT_DIRECTION_RTL);
         mDialog.setCanceledOnTouchOutside(true);
