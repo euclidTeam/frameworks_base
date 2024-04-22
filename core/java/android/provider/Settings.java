@@ -6353,6 +6353,12 @@ public final class Settings {
         public static final String SHOW_APP_VOLUME = "show_app_volume";
 
         /**
+         * Whether to turn on Bluetooth automatically when showing the Bluetooth dialog
+         * @hide
+         */
+        public static final String QS_BT_AUTO_ON = "qs_bt_auto_on";
+
+        /**
          * Override max volume for {@link android.media.AudioSystem.STREAM_VOICE_CALL}
          * see {@link com.android.server.audio.AudioService} for defaults in priority
          * -1 = disabled
