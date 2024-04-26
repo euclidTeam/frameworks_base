@@ -529,8 +529,8 @@ open class LandscapeBatteryE(private val context: Context, frameColor: Int) : Dr
         return batteryLevel
     }
 
-    override fun onBoundsChange(bounds: Rect) {
-        super.onBoundsChange(bounds)
+    override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
+        super.setBounds(left, top, right, bottom)
         updateSize()
     }
 
