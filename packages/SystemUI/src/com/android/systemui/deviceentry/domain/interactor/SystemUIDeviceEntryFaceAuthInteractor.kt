@@ -20,6 +20,7 @@ import android.app.trust.TrustManager
 import android.content.Context
 import android.hardware.biometrics.BiometricFaceConstants
 import android.hardware.biometrics.BiometricSourceType
+import android.provider.Settings
 import com.android.keyguard.KeyguardUpdateMonitor
 import com.android.systemui.CoreStartable
 import com.android.systemui.biometrics.data.repository.FacePropertyRepository
@@ -87,6 +88,14 @@ constructor(
 ) : CoreStartable, DeviceEntryFaceAuthInteractor {
 
     private val listeners: MutableList<FaceAuthenticationListener> = mutableListOf()
+
+    private fun shouldDisableLockOut(): Boolean {
+        return Settings.System.getInt(
+                context.getContentResolver(),
+                Settings.System.FACE_LOCKOUT,
+                0
+            ) == 1
+    }
 
     override fun start() {
         // Todo(b/310594096): there is a dependency cycle introduced by the repository depending on
@@ -274,7 +283,7 @@ constructor(
     override val detectionStatus = repository.detectionStatus
 
     private fun runFaceAuth(uiEvent: FaceAuthUiEvent, fallbackToDetect: Boolean) {
-        if (repository.isLockedOut.value) {
+        if (repository.isLockedOut.value && !shouldDisableLockOut()) {
             faceAuthenticationStatusOverride.value =
                 ErrorFaceAuthenticationStatus(
                     BiometricFaceConstants.FACE_ERROR_LOCKOUT_PERMANENT,

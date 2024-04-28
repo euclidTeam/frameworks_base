@@ -20,6 +20,7 @@ import android.app.StatusBarManager
 import android.content.Context
 import android.hardware.face.FaceManager
 import android.os.CancellationSignal
+import android.provider.Settings
 import com.android.internal.logging.InstanceId
 import com.android.internal.logging.UiEventLogger
 import com.android.systemui.Dumpable
@@ -143,7 +144,7 @@ private data class AuthenticationRequest(
 class DeviceEntryFaceAuthRepositoryImpl
 @Inject
 constructor(
-    context: Context,
+    private val context: Context,
     private val faceManager: FaceManager? = null,
     private val userRepository: UserRepository,
     private val keyguardBypassController: KeyguardBypassController? = null,
@@ -223,8 +224,16 @@ constructor(
         }
             ?: flowOf(false)
 
+    private fun shouldDisableLockOut(): Boolean {
+        return Settings.System.getInt(
+                context.getContentResolver(),
+                Settings.System.FACE_LOCKOUT,
+                0
+            ) == 1
+    }
+
     override fun setLockedOut(isLockedOut: Boolean) {
-        _isLockedOut.value = isLockedOut
+        _isLockedOut.value = if (shouldDisableLockOut()) false else isLockedOut
     }
 
     private val faceLockoutResetCallback =
@@ -447,7 +456,7 @@ constructor(
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
                 val errorStatus = ErrorFaceAuthenticationStatus(errorCode, errString.toString())
                 if (errorStatus.isLockoutError()) {
-                    _isLockedOut.value = true
+                    _isLockedOut.value = if (shouldDisableLockOut()) false else true
                 }
                 _isAuthenticated.value = false
                 _authenticationStatus.value = errorStatus
