@@ -215,6 +215,7 @@ constructor(
         applicationScope.launch {
             _userInfos.value =
                 withContext(backgroundDispatcher) { manager.aliveUsers }
+                    .filter { !it.isParallel() } // Ignore parallel users
                     // Users should be sorted by ascending creation time.
                     .sortedBy { it.creationTime }
                     // The guest user is always last, regardless of creation time.
