@@ -739,7 +739,7 @@ public class CameraServiceProxy extends SystemService
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(Intent.ACTION_PARALLEL_SPACE_CHANGED);
-        mContext.registerReceiver(mIntentReceiver, filter);
+        mContext.registerReceiver(mIntentReceiver, filter, Context.RECEIVER_EXPORTED);
 
         publishBinderService(CAMERA_SERVICE_PROXY_BINDER_NAME, mCameraServiceProxy);
         publishLocalService(CameraServiceProxy.class, this);
