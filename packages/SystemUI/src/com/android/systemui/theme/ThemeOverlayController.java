@@ -573,7 +573,7 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 },
                 UserHandle.USER_ALL);
 
-        mUserTracker.addCallback(mUserTrackerCallback, mMainExecutor);
+        mUserTracker.addCallback(mUserTrackerCallback, mBgExecutor);
 
         mDeviceProvisionedController.addCallback(mDeviceProvisionedListener);
 
