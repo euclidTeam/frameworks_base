@@ -9992,7 +9992,6 @@ public class WindowManagerService extends IWindowManager.Stub
         mSurfaceSyncGroupController.markSyncGroupReady(syncGroupToken);
     }
 
-
     /**
      * Must be called when a screenshot is taken via hardware chord.
      *
@@ -10006,7 +10005,9 @@ public class WindowManagerService extends IWindowManager.Stub
                 "notifyScreenshotListeners()")) {
             throw new SecurityException("Requires STATUS_BAR_SERVICE permission");
         }
+
         synchronized (mGlobalLock) {
+            if (shouldHideScreenCapture()) return new ArrayList<>();
             final DisplayContent displayContent = mRoot.getDisplayContent(displayId);
             if (displayContent == null) {
                 return new ArrayList<>();
@@ -10064,6 +10065,10 @@ public class WindowManagerService extends IWindowManager.Stub
     @EnforcePermission(android.Manifest.permission.DETECT_SCREEN_RECORDING)
     @Override
     public boolean registerScreenRecordingCallback(IScreenRecordingCallback callback) {
+        if (shouldHideScreenCapture()) {
+            return false;
+        }
+
         registerScreenRecordingCallback_enforcePermission();
         return mScreenRecordingCallbackController.register(callback);
     }
@@ -10076,6 +10081,10 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     void onProcessActivityVisibilityChanged(int uid, boolean visible) {
+        if (shouldHideScreenCapture()) {
+            return;
+        }
+
         mScreenRecordingCallbackController.onProcessActivityVisibilityChanged(uid, visible);
     }
 
@@ -10088,5 +10097,10 @@ public class WindowManagerService extends IWindowManager.Stub
         synchronized (mGlobalLock) {
             mDragDropController.setGlobalDragListener(listener);
         }
+    }
+
+    private boolean shouldHideScreenCapture() {
+        return Settings.Global.getInt(mContext.getContentResolver(),
+                Settings.Global.HIDE_SCREEN_CAPTURE_STATUS, 0) != 0;
     }
 }
