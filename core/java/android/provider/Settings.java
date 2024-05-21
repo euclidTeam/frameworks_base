@@ -20152,6 +20152,12 @@ public final class Settings {
         public static final String NO_STORAGE_RESTRICT = "no_storage_restrict";
 
         /**
+         * Control whether to hide screen capture status from apps.
+         * @hide
+         */
+        public static final String HIDE_SCREEN_CAPTURE_STATUS = "hide_screen_capture_status";
+
+        /**
          * Setting indicating whether Low Power Standby is enabled, if supported.
          *
          * Values are:
