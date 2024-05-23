@@ -86,6 +86,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import javax.crypto.SecretKey;
@@ -180,7 +181,14 @@ public class AndroidKeyStoreSpi extends KeyStoreSpi {
 
     @Override
     public Certificate[] engineGetCertificateChain(String alias) {
-        PixelPropsUtils.onEngineGetCertificateChain();
+        if (PixelPropsUtils.getIsFinsky()) {
+            throw new UnsupportedOperationException("Blocking safetynet attestation for finsky");
+        }
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            if (ste.getClassName().toLowerCase(Locale.US).contains("droidguard")) {
+                throw new UnsupportedOperationException("Blocking safetynet attestation");
+            }
+        }
 
         KeyEntryResponse response = getKeyMetadata(alias);
 

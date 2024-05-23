@@ -421,16 +421,7 @@ public class PixelPropsUtils {
         setVersionFieldString("SECURITY_PATCH", "2016-09-01");
     }
 
-    private static boolean isCallerSafetyNet() {
-        return sIsGms && Arrays.stream(Thread.currentThread().getStackTrace())
-                .anyMatch(elem -> elem.getClassName().contains("DroidGuard"));
-    }
-
-    public static void onEngineGetCertificateChain() {
-        // Check stack for SafetyNet or Play Integrity
-        if ((isCallerSafetyNet() || sIsFinsky) && !sIsExcluded) {
-            Log.i(TAG, "Blocked key attestation sIsGms=" + sIsGms + " sIsFinsky=" + sIsFinsky);
-            throw new UnsupportedOperationException();
-        }
+    public static boolean getIsFinsky() {
+        return sIsFinsky;
     }
 }
