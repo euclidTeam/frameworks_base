@@ -26,17 +26,17 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Helper functions for uploading to KatBin (https://katb.in).
+ * Helper functions for uploading to MkrBin (https://bin.mkr.pw/).
  */
-public final class KatBinUtils {
+public final class MkrBinUtils {
 
-    private static final String binUrl = "https://katb.in";
+    private static final String binUrl = "https://bin.mkr.pw";
     private static Handler mHandler;
 
     /**
-     * Uploads {@code content} to KatBin
+     * Uploads {@code content} to MkrBin
      *
-     * @param content  the content to upload to KatBin
+     * @param content  the content to upload to MkrBin
      * @param callback the callback to call on success / failure
      */
     public static void upload(String content, UploadResultCallback callback) {
@@ -61,12 +61,12 @@ public final class KatBinUtils {
                 if (!urlPath.isEmpty()) {
                     callback.onSuccess(binUrl + urlPath);
                 } else {
-                    String msg = "Failed to upload to KatBin: No id retrieved";
+                    String msg = "Failed to upload to MkrBin: No id retrieved";
                     callback.onFail(msg, new Exception(msg));
                 }
                 urlConnection.disconnect();
             } catch (Exception e) {
-                String msg = "Failed to upload to KatBin";
+                String msg = "Failed to upload to MkrBin";
                 callback.onFail(msg, e);
             }
         });
@@ -74,11 +74,11 @@ public final class KatBinUtils {
 
     private static Handler getHandler() {
         if (mHandler == null) {
-            HandlerThread katBinThread = new HandlerThread("KatBinThread");
-            if (!katBinThread.isAlive()) {
-                katBinThread.start();
+            HandlerThread mkrBinThread = new HandlerThread("MkrBinThread");
+            if (!mkrBinThread.isAlive()) {
+                mkrBinThread.start();
             }
-            mHandler = new Handler(katBinThread.getLooper());
+            mHandler = new Handler(mkrBinThread.getLooper());
         }
         return mHandler;
     }

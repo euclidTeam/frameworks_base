@@ -654,7 +654,7 @@ class AppErrors {
                 return;
             }
 
-            // Add paste content for KatBin option
+            // Add paste content for MkrBin option
             String devFP = SystemProperties.get("ro.vendor.build.fingerprint", "");
             String euclidVers = SystemProperties.get("ro.euclid.version", "");
             String boardName = SystemProperties.get("ro.product.board", "");
