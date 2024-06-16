@@ -185,6 +185,7 @@ public class ScreenshotController {
         public Uri uri;
         public Notification.Action lensAction;
         public List<Notification.Action> smartActions;
+        public Notification.Action deleteAction;
         public Notification.Action quickShareAction;
         public UserHandle owner;
         public String subject;  // Title for sharing
@@ -197,6 +198,7 @@ public class ScreenshotController {
             lensAction = null;
             smartActions = null;
             quickShareAction = null;
+            deleteAction = null;
             subject = null;
         }
     }

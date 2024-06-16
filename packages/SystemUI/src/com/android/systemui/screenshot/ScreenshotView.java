@@ -850,10 +850,12 @@ public class ScreenshotView extends FrameLayout implements
                     ActionIntentCreator.INSTANCE.createEdit(imageData.uri, mContext),
                     imageData.owner, true);
         });
-        mDeleteChip.setPendingIntent(imageData.deleteAction.actionIntent, () -> {
-            mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_DELETE_TAPPED);
-            animateDismissal();
-        });
+        if (imageData.deleteAction != null) {
+            mDeleteChip.setPendingIntent(imageData.deleteAction.actionIntent, () -> {
+                mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_DELETE_TAPPED);
+                animateDismissal();
+            });
+        }
         mLensChip.setPendingIntent(imageData.lensAction.actionIntent, () -> {
             mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LENS_TAPPED);
             animateDismissal();
