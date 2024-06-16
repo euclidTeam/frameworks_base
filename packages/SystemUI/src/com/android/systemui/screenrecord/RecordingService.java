@@ -720,7 +720,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
      * @return
      */
     protected Intent getNotificationIntent(Context context) {
-        return new Intent(context, this.getClass()).setAction(ACTION_STOP_NOTIF);
+        return new Intent(context, RecordingService.class).setAction(ACTION_STOP_NOTIF);
     }
 
     private Intent getShareIntent(Context context, String path) {
@@ -728,7 +728,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     }
 
     private static Intent getShareIntent(Context context, String path, int id) {
-        return new Intent(context, this.getClass()).setAction(ACTION_SHARE)
+        return new Intent(context, RecordingService.class).setAction(ACTION_SHARE)
                 .putExtra(EXTRA_PATH, path)
                 .putExtra(EXTRA_ID, id);
     }
