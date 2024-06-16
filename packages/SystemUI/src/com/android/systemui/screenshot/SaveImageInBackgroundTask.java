@@ -163,7 +163,7 @@ class SaveImageInBackgroundTask extends AsyncTask<String, Void, Void> {
             mImageData.uri = uri;
             mImageData.owner = mParams.owner;
             mImageData.smartActions = smartActions;
-            mImageData.lensAction = createLensAction(mContext, mContext.getResources(), uri,
+            mImageData.lensAction = createLensAction(mContext, uri,
                     smartActionsEnabled);
             mImageData.quickShareAction = createQuickShareAction(
                     mQuickShareData.quickShareAction, mScreenshotId, uri, mImageTime, image,
@@ -220,7 +220,7 @@ class SaveImageInBackgroundTask extends AsyncTask<String, Void, Void> {
 
 
     @VisibleForTesting
-    Notification.Action createLensAction(Context context, Resources r, Uri uri,
+    Notification.Action createLensAction(Context context, Uri uri,
             boolean smartActionsEnabled) {
         // Make sure pending intents for the system user are still unique across users
         // by setting the (otherwise unused) request code to the current user id.
@@ -238,8 +238,8 @@ class SaveImageInBackgroundTask extends AsyncTask<String, Void, Void> {
                         | PendingIntent.FLAG_ONE_SHOT
                         | PendingIntent.FLAG_IMMUTABLE);
         Notification.Action.Builder lensActionBuilder = new Notification.Action.Builder(
-                Icon.createWithResource(r, R.drawable.ic_screenshot_lens),
-                r.getString(R.string.lens), lensAction);
+                Icon.createWithResource(mContext.getResources(), R.drawable.ic_screenshot_lens),
+                mContext.getResources().getString(R.string.lens), lensAction);
 
         return lensActionBuilder.build();
     }
