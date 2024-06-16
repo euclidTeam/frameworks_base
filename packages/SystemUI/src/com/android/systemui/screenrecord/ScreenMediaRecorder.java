@@ -56,7 +56,6 @@ import android.view.WindowManager;
 
 import com.android.internal.R;
 import com.android.systemui.mediaprojection.MediaProjectionCaptureTarget;
-import com.android.systemui.res.R;
 
 import java.io.Closeable;
 import java.io.File;
@@ -118,7 +117,7 @@ public class ScreenMediaRecorder extends MediaProjection.Callback {
         mListener = listener;
         mAudioSource = audioSource;
         mMaxRefreshRate = mContext.getResources().getInteger(
-                R.integer.config_screenRecorderMaxFramerate);
+                com.android.systemui.res.R.integer.config_screenRecorderMaxFramerate);
         mAvcProfileLevel = mContext.getResources().getString(
                 R.string.config_screenRecorderAVCProfileLevel);
     }
