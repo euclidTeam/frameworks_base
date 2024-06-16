@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.android.internal.util.euclid.cutout;
 
 import android.content.ContentResolver;
@@ -25,23 +24,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
 import android.text.TextUtils;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import android.provider.Settings;
 
 public class CutoutFullscreenController {
     private Set<String> mApps = new HashSet<>();
     private Context mContext;
-
     private final boolean mIsAvailable;
 
     public CutoutFullscreenController(Context context) {
         mContext = context;
 
-	    final String displayCutout = mContext.getString(
+        final String displayCutout = mContext.getString(
                 com.android.internal.R.string.config_mainBuiltInDisplayCutout);
         mIsAvailable = !TextUtils.isEmpty(displayCutout);
 
@@ -58,10 +54,14 @@ public class CutoutFullscreenController {
     }
 
     public boolean shouldForceCutoutFullscreen(String packageName) {
-        return isSupported() && (mApps.contains(packageName)
+        if (!isSupported() || mApps == null || packageName == null) {
+            return false;
+        }
+
+        return mApps.contains(packageName)
                 || packageName.contains("dialer")
                 || packageName.contains("android.settings")
-                || packageName.contains("com.spotify.music"));
+                || packageName.contains("com.spotify.music");
     }
 
     public Set<String> getApps() {
@@ -69,19 +69,23 @@ public class CutoutFullscreenController {
     }
 
     public void addApp(String packageName) {
-        mApps.add(packageName);
-        Settings.System.putString(mContext.getContentResolver(),
-                Settings.System.FORCE_FULLSCREEN_CUTOUT_APPS, String.join(",", mApps));
+        if (packageName != null) {
+            mApps.add(packageName);
+            Settings.System.putString(mContext.getContentResolver(),
+                    Settings.System.FORCE_FULLSCREEN_CUTOUT_APPS, String.join(",", mApps));
+        }
     }
 
     public void removeApp(String packageName) {
-        mApps.remove(packageName);
-        Settings.System.putString(mContext.getContentResolver(),
-                Settings.System.FORCE_FULLSCREEN_CUTOUT_APPS, String.join(",", mApps));
+        if (packageName != null) {
+            mApps.remove(packageName);
+            Settings.System.putString(mContext.getContentResolver(),
+                    Settings.System.FORCE_FULLSCREEN_CUTOUT_APPS, String.join(",", mApps));
+        }
     }
 
     public void setApps(Set<String> apps) {
-        mApps = apps;
+        mApps = (apps != null) ? apps : new HashSet<>();
     }
 
     class SettingsObserver extends ContentObserver {
