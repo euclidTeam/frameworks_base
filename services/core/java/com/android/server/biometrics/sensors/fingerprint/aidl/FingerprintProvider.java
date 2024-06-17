@@ -219,10 +219,10 @@ public class FingerprintProvider implements IBinder.DeathRecipient, ServiceProvi
 
         initAuthenticationBroadcastReceiver();
         initSensors(resetLockoutRequiresHardwareAuthToken, props, gestureAvailabilityDispatcher);
-    }
 
-    mCleanupEnabled = mContext.getResources().getBoolean(
+	mCleanupEnabled = mContext.getResources().getBoolean(
                 R.bool.config_cleanupUnusedFingerprints);
+    }
 
     private void initAuthenticationBroadcastReceiver() {
         new AuthenticationStatsBroadcastReceiver(
