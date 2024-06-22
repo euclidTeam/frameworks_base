@@ -22,6 +22,7 @@ import android.os.UserHandle
 import com.android.internal.statusbar.StatusBarIcon
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy.CallIndicatorIconState
 import com.android.systemui.statusbar.pipeline.icons.shared.model.ModernStatusBarViewCreator
+import com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.BluetoothIconState
 
 /** Wraps [com.android.internal.statusbar.StatusBarIcon] so we can still have a uniform list */
 open class StatusBarIconHolder private constructor() {
@@ -30,6 +31,7 @@ open class StatusBarIconHolder private constructor() {
     internal annotation class IconType
 
     var icon: StatusBarIcon? = null
+    var bluetoothState: BluetoothIconState? = null
 
     @IconType
     open var type = TYPE_ICON
@@ -42,7 +44,7 @@ open class StatusBarIconHolder private constructor() {
         get() =
             when (type) {
                 TYPE_ICON -> icon!!.visible
-
+                TYPE_BLUETOOTH -> bluetoothState!!.visible
                 // The new pipeline controls visibilities via the view model and
                 // view binder, so
                 // this is effectively an unused return value.
@@ -57,6 +59,7 @@ open class StatusBarIconHolder private constructor() {
             }
             when (type) {
                 TYPE_ICON -> icon!!.visible = visible
+                TYPE_BLUETOOTH -> bluetoothState!!.visible = visible
                 TYPE_BINDABLE,
                 TYPE_MOBILE_NEW,
                 TYPE_WIFI_NEW -> {}
@@ -102,19 +105,13 @@ open class StatusBarIconHolder private constructor() {
 
         const val TYPE_BLUETOOTH = 6
 
-        @JvmStatic
-        fun fromBluetoothIconState(): StatusBarIconHolder {
-            val holder = StatusBarIconHolder()
-            holder.mType = TYPE_BLUETOOTH
-            return holder
-        }
-
         /** Returns a human-readable string representing the given type. */
         fun getTypeString(@IconType type: Int): String {
             return when (type) {
                 TYPE_ICON -> "ICON"
                 TYPE_MOBILE_NEW -> "MOBILE_NEW"
                 TYPE_WIFI_NEW -> "WIFI_NEW"
+                TYPE_BLUETOOTH -> "BLUETOOTH"
                 else -> "UNKNOWN"
             }
         }
@@ -143,6 +140,14 @@ open class StatusBarIconHolder private constructor() {
             val holder = StatusBarIconHolder()
             holder.type = TYPE_MOBILE_NEW
             holder.tag = subId
+            return holder
+        }
+
+        @JvmStatic
+        fun fromBluetoothIconState(state: BluetoothIconState): StatusBarIconHolder {
+            val holder = StatusBarIconHolder()
+            holder.bluetoothState = state
+            holder.type = TYPE_BLUETOOTH
             return holder
         }
 
