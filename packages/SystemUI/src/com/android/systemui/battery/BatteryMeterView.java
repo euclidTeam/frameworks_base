@@ -39,6 +39,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -868,12 +869,11 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver ,Tune
 
         if (mLevel != level) {
             mLevel = level;
-            mAccessorizedDrawable.setBatteryLevel(level);
-            mCircleDrawable.setBatteryLevel(level);
-            mFullCircleDrawable.setBatteryLevel(level);
-            mRLandscapeDrawable.setBatteryLevel(level);
-            mLandscapeDrawable.setBatteryLevel(level);
+            mAccessorizedDrawable.setBatteryLevel(mLevel);
             mThemedDrawable.setBatteryLevel(mLevel);
+            mCircleDrawable.setBatteryLevel(mLevel);
+            mFullCircleDrawable.setBatteryLevel(mLevel);
+            mRLandscapeDrawable.setBatteryLevel(mLevel);
             mLandscapeDrawable.setBatteryLevel(mLevel);
             mLandscapeBatteryA.setBatteryLevel(mLevel);
             mLandscapeBatteryB.setBatteryLevel(mLevel);
@@ -894,12 +894,13 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver ,Tune
         }
         if (mPluggedIn != pluggedIn) {
             mPluggedIn = pluggedIn;
-            mAccessorizedDrawable.setCharging(isCharging());
-            mCircleDrawable.setCharging(isCharging());
-            mFullCircleDrawable.setCharging(isCharging());
-            mRLandscapeDrawable.setCharging(isCharging());
-            mLandscapeDrawable.setCharging(isCharging());
+            mAccessorizedDrawable.setCharging(mPluggedIn);
             mThemedDrawable.setCharging(mPluggedIn);
+            mCircleDrawable.setCharging(mPluggedIn);
+            mFullCircleDrawable.setCharging(mPluggedIn);
+            mFullCircleDrawable.setCharging(mPluggedIn);
+            mRLandscapeDrawable.setCharging(mPluggedIn);
+            mLandscapeDrawable.setCharging(mPluggedIn);
             mLandscapeDrawable.setCharging(mPluggedIn);
             mLandscapeBatteryA.setCharging(mPluggedIn);
             mLandscapeBatteryB.setCharging(mPluggedIn);
@@ -1796,8 +1797,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver ,Tune
     }
 
     public void dump(PrintWriter pw, String[] args) {
-        String powerSave = mAccessorizedDrawable == null ?
-                null : mAccessorizedDrawable.getPowerSaveEnabled() + "";
+        String powerSave = mAccessorizedDrawable == null ? null : mAccessorizedDrawable.getPowerSaveEnabled() + "";
         String displayShield = mAccessorizedDrawable == null ? null : mAccessorizedDrawable.getDisplayShield() + "";
         String charging = mAccessorizedDrawable == null ? null : mAccessorizedDrawable.getCharging() + "";
         CharSequence percent = mBatteryPercentView == null ? null : mBatteryPercentView.getText();
