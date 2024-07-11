@@ -201,7 +201,7 @@ class MobileIconInteractorImpl(
                         override fun onTuningChanged(key: String, newValue: String?) {
                             when (key) {
                                 SHOW_FOURG_ICON -> 
-                                    trySend(TunerService.parseIntegerSwitch(newValue, true))
+                                    trySend(TunerService.parseIntegerSwitch(newValue, false))
                             }
                         }
                     }
