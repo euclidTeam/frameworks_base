@@ -51,7 +51,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.systemui.R;
+import com.android.systemui.res.R;
 import com.android.systemui.tristate.TriStateUiController;
 import com.android.systemui.tristate.TriStateUiController.UserActivityListener;
 import com.android.systemui.plugins.VolumeDialogController;
@@ -149,7 +149,10 @@ public class TriStateUiControllerImpl implements TriStateUiController,
 
         @Override
         public void onCaptionComponentStateChanged(
-                Boolean isComponentEnabled, Boolean fromTooltip) {}
+                Boolean isComponentEnabled, Boolean fromTooltip) { }
+
+        @Override
+        public void onVolumeChangedFromKey() { }
 
         @Override
         public void onCaptionEnabledStateChanged(Boolean isEnabled, Boolean checkBeforeSwitch) {}
