@@ -46,14 +46,18 @@
             app:expandedTitleTextAppearance="@style/CollapsingToolbarTitle.Expanded"
             app:expandedTitleMarginStart="@dimen/expanded_title_margin_start"
             app:expandedTitleMarginEnd="@dimen/expanded_title_margin_end"
-            app:toolbarId="@id/action_bar">
+            app:toolbarId="@id/action_bar"
+            app:expandedTitleGravity="bottom|center_horizontal">
 
             <Toolbar
                 android:id="@+id/action_bar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="?android:attr/actionBarTheme"
+                android:layout_width="fill_parent"
+                android:layout_height="?actionBarSize"
+                android:theme="?android:actionBarTheme"
                 android:transitionName="shared_element_view"
+                android:layout_marginTop="4dp"
+                android:contentInsetStartWithNavigation="0dp"
+                android:navigationIcon="@drawable/back_arrow"
                 app:layout_collapseMode="pin"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
