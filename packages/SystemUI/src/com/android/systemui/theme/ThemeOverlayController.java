@@ -32,6 +32,7 @@ import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_BOTH;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_LUMINANCE_FACTOR;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_CHROMA_FACTOR;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_TINT_BACKGROUND;
+import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_SECONDARY_COLOR;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_INDEX;
 import static com.android.systemui.theme.ThemeOverlayApplier.OVERLAY_COLOR_SOURCE;
 import static com.android.systemui.theme.ThemeOverlayApplier.TIMESTAMP_FIELD;
@@ -748,7 +749,8 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 fetchLuminanceFactorFromSetting(),
                 fetchChromaFactorFromSetting(),
                 fetchTintBackgroundFromSetting(),
-                fetchBgColorFromSetting());
+                fetchBgColorFromSetting(),
+                fetchSecondaryColorFromSetting());
         mNeutralOverlay = createNeutralOverlay();
         mSecondaryOverlay = createAccentOverlay();
 
@@ -1050,6 +1052,22 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                 Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e);
             }
         }
+        return null;
+    }
+
+    private Integer fetchSecondaryColorFromSetting() {
+        final String overlayPackageJson = mSecureSettings.getStringForUser(
+                Settings.Secure.THEME_CUSTOMIZATION_OVERLAY_PACKAGES,
+                mUserTracker.getUserId());
+        if (!TextUtils.isEmpty(overlayPackageJson)) {
+            try {
+                JSONObject object = new JSONObject(overlayPackageJson);
+                int res = object.optInt(OVERLAY_SECONDARY_COLOR);
+                return res != 0 ? res : null;
+            } catch (JSONException | IllegalArgumentException e) {
+                Log.i(TAG, "Failed to parse THEME_CUSTOMIZATION_OVERLAY_PACKAGES.", e);
+            }
+	}
         return null;
     }
 

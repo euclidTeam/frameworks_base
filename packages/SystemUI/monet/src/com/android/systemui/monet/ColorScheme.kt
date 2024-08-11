@@ -388,7 +388,8 @@ class ColorScheme(
     val luminanceFactor: Float = 1f,
     val chromaFactor: Float = 1f,
     val tintBackground: Boolean = false,
-    @ColorInt val bgSeed: Int? = null
+    @ColorInt val bgSeed: Int? = null,
+    @ColorInt val secondaryColorSeed: Int? = null
 ) {
 
     val accent1: TonalPalette
@@ -398,8 +399,8 @@ class ColorScheme(
     val neutral2: TonalPalette
 
     constructor(@ColorInt seed: Int, darkTheme: Boolean, style: Style = Style.TONAL_SPOT,
-            luminanceFactor: Float = 1f, chromaFactor: Float = 1f, tintBackground: Boolean = false):
-            this(seed, darkTheme, style, luminanceFactor, chromaFactor, tintBackground, null)
+            luminanceFactor: Float = 1f, chromaFactor: Float = 1f, tintBackground: Boolean = false, @ColorInt secondaryColorSeed: Int):
+            this(seed, darkTheme, style, luminanceFactor, chromaFactor, tintBackground, null, secondaryColorSeed)
 
     constructor(@ColorInt seed: Int, darkTheme: Boolean) : this(seed, darkTheme, Style.TONAL_SPOT)
 
@@ -411,9 +412,10 @@ class ColorScheme(
         luminanceFactor: Float = 1f,
         chromaFactor: Float = 1f,
         tintBackground: Boolean = false,
-        bgSeed: Int? = null
+        bgSeed: Int? = null,
+        secondaryColorSeed: Int? = null
     ) : this(getSeedColor(wallpaperColors, style != Style.CONTENT), darkTheme, style,
-             luminanceFactor, chromaFactor, tintBackground, bgSeed)
+             luminanceFactor, chromaFactor, tintBackground, bgSeed, secondaryColorSeed)
 
     val allHues: List<TonalPalette>
         get() {
@@ -466,9 +468,21 @@ class ColorScheme(
                 bgSeed
             }
 
+        val proposedSecondaryColorSeedCam = Cam.fromInt(if (secondaryColorSeed == null) seed else secondaryColorSeed)
+        val secondaryColorSeedArgb =
+            if (secondaryColorSeed == null) {
+                seedArgb
+            } else if (secondaryColorSeed == Color.TRANSPARENT) {
+                GOOGLE_BLUE
+            } else if (style != Style.CONTENT && proposedSecondaryColorSeedCam.chroma < 5) {
+                GOOGLE_BLUE
+            } else {
+                secondaryColorSeed
+            }
+
         accent1 = TonalPalette(style.coreSpec.a1, seedArgb, luminanceFactor, chromaFactor)
         accent2 = TonalPalette(style.coreSpec.a2, seedArgb)
-        accent3 = TonalPalette(style.coreSpec.a3, seedArgb)
+        accent3 = TonalPalette(style.coreSpec.a3, secondaryColorSeedArgb)
         neutral1 = TonalPalette(style.coreSpec.n1, bgSeedArgb,
                 if (tintBackground) luminanceFactor else 1f,
                 if (tintBackground) chromaFactor else 1f)
