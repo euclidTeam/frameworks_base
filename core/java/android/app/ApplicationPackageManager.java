@@ -821,6 +821,10 @@ public class ApplicationPackageManager extends PackageManager {
             };
 
     private static final String[] pTensorCodenames = {
+            "comet",
+            "komodo",
+            "caiman",
+            "tokay",
             "akita",
             "husky",
             "shiba",
