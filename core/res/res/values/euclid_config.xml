@@ -43,4 +43,20 @@
     <!-- Default values for status bar DT2S gesture -->
      <bool name="config_dt2sGestureAvailable">true</bool>
      <bool name="config_dt2sGestureEnabledByDefault">true</bool>
+
+    <!-- Keybox configuration for device certification -->
+    <string-array name="config_certifiedKeybox" translatable="false">
+      <!--
+        Keybox entries for EC and RSA keys and certificates.
+        These should be populated with valid data for device certification.
+        <item>EC.PRIV:</item>
+        <item>EC.CERT_1:</item>
+        <item>EC.CERT_2:</item>
+        <item>EC.CERT_3:</item>
+        <item>RSA.PRIV:</item>
+        <item>RSA.CERT_1:</item>
+        <item>RSA.CERT_2:</item>
+        <item>RSA.CERT_3:</item>
+      -->
+    </string-array>
 </resources>
