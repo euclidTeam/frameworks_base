@@ -27,6 +27,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Process;
 import android.os.SystemProperties;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -47,10 +48,12 @@ public final class PixelPropsUtils {
 
     private static final String SPOOF_PIXEL_GMS = "persist.sys.pixelprops.gms";
     private static final String SPOOF_PIXEL_GPHOTOS = "persist.sys.pixelprops.gphotos";
-    private static final String SPOOF_PIXEL_NETFLIX = "persist.sys.pixelprops.netflix";
     private static final String ENABLE_PROP_OPTIONS = "persist.sys.pixelprops.all";
     private static final String ENABLE_GAME_PROP_OPTIONS = "persist.sys.gameprops.enabled";
     private static final String SPOOF_PIXEL_GOOGLE_APPS = "persist.sys.pixelprops.google";
+
+    private static final String PACKAGE_NETFLIX = "com.netflix.mediaclient";
+    private static final String sNetflixModel = SystemProperties.get("persist.sys.pihooks.netflix_model", "");
 
     private static final Map<String, Object> propsToChangeMainline;
     private static final Map<String, Object> propsToChangePixelXL;
@@ -113,7 +116,7 @@ public final class PixelPropsUtils {
         final String processName = Application.getProcessName();
         boolean isExcludedProcess = processName != null && (processName.toLowerCase().contains("unstable"));
 
-        String[] packagesToChangePixel8Pro = {
+        String[] packagesToChangePixel9Pro = {
             "com.android.chrome",
             "com.breel.wallpapers20",
             "com.google.android.aicore",
@@ -139,7 +142,7 @@ public final class PixelPropsUtils {
             "com.nhs.online.nhsonline"
         };
 
-        if (Arrays.asList(packagesToChangePixel8Pro).contains(packageName) && !isExcludedProcess) {
+        if (Arrays.asList(packagesToChangePixel9Pro).contains(packageName) && !isExcludedProcess) {
             if (SystemProperties.getBoolean(SPOOF_PIXEL_GOOGLE_APPS, true)) {
                 if (!isPixelDevice) {
                     propsToChange.putAll(propsToChangeMainline);
@@ -164,6 +167,13 @@ public final class PixelPropsUtils {
                 if (shouldTryToCertifyDevice(Application.getProcessName())) {
                     return;
                 }
+            }
+        }
+
+        if (PACKAGE_NETFLIX.equals(packageName)) {
+            if (!TextUtils.isEmpty(sNetflixModel)) {
+                dlog("Setting model to " + sNetflixModel + " for Netflix");
+                propsToChange.put("MODEL", sNetflixModel);
             }
         }
 
