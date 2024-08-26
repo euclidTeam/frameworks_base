@@ -114,19 +114,29 @@ public final class PixelPropsUtils {
         boolean isExcludedProcess = processName != null && (processName.toLowerCase().contains("unstable"));
 
         String[] packagesToChangePixel8Pro = {
+            "com.android.chrome",
+            "com.breel.wallpapers20",
+            "com.google.android.aicore",
             "com.google.android.apps.aiwallpapers",
             "com.google.android.apps.bard",
             "com.google.android.apps.customization.pixel",
             "com.google.android.apps.emojiwallpaper",
             "com.google.android.apps.nexuslauncher",
+            "com.google.android.apps.pixel.agent",
+            "com.google.android.apps.pixel.creativeassistant",
+            "com.google.android.apps.pixel.support",
             "com.google.android.apps.privacy.wildlife",
+            "com.google.android.apps.subscriptions.red",
             "com.google.android.apps.wallpaper",
             "com.google.android.apps.wallpaper.pixel",
+            "com.google.android.apps.weather",
             "com.google.android.gms",
             "com.google.android.googlequicksearchbox",
             "com.google.android.inputmethod.latin",
             "com.google.android.tts",
-            "com.google.android.wallpaper.effects"
+            "com.google.android.wallpaper.effects",
+            "com.google.pixel.livewallpaper",
+            "com.nhs.online.nhsonline"
         };
 
         if (Arrays.asList(packagesToChangePixel8Pro).contains(packageName) && !isExcludedProcess) {
