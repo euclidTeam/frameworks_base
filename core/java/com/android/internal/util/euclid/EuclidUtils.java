@@ -26,7 +26,10 @@ import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.IActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -46,6 +49,7 @@ import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.input.InputManager;
 import android.hardware.fingerprint.FingerprintManager;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -65,6 +69,8 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.view.IWindowManager;
+import android.view.WindowManagerGlobal;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -594,13 +600,6 @@ public class EuclidUtils {
         return telephony != null && telephony.isVoiceCapable();
     }
 
-    // Method to turn off the screen
-    public static void switchScreenOff(Context ctx) {
-        PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
-        if (pm!= null) {
-            pm.goToSleep(SystemClock.uptimeMillis());
-        }
-    }
 
     public static void restartSystemUi(Context context) {
         new RestartSystemUiTask(context).execute();
