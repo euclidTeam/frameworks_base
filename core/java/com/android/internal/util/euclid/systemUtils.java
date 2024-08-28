@@ -23,6 +23,7 @@ import android.app.IActivityManager;
 import android.app.ActivityManager;
 import android.content.DialogInterface;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
