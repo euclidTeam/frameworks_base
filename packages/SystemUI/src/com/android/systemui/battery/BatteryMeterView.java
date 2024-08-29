@@ -88,19 +88,19 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
     protected static final int BATTERY_STYLE_LANDSCAPE = 7;
     protected static final int BATTERY_STYLE_BIG_CIRCLE = 8;
     protected static final int BATTERY_STYLE_BIG_DOTTED_CIRCLE = 9;
-    protected static final int BATTERY_STYLE_LANDSCAPE_BUDDY = 8;
-    protected static final int BATTERY_STYLE_LANDSCAPE_LINE = 9;
-    protected static final int BATTERY_STYLE_LANDSCAPE_MUSKU = 10;
-    protected static final int BATTERY_STYLE_LANDSCAPE_PILL = 11;
-    protected static final int BATTERY_STYLE_LANDSCAPE_SIGNAL = 12;
-    protected static final int BATTERY_STYLE_RLANDSCAPE_STYLE_A = 13;
-    protected static final int BATTERY_STYLE_LANDSCAPE_STYLE_A = 14;
-    protected static final int BATTERY_STYLE_RLANDSCAPE_STYLE_B = 15;
-    protected static final int BATTERY_STYLE_LANDSCAPE_STYLE_B = 16;
-    protected static final int BATTERY_STYLE_LANDSCAPE_IOS15 = 17;
-    protected static final int BATTERY_STYLE_LANDSCAPE_IOS16 = 18;
-    protected static final int BATTERY_STYLE_LANDSCAPE_ORIGAMI = 19;
-    protected static final int BATTERY_STYLE_LANDSCAPE_MIUI_PILL = 20;
+    protected static final int BATTERY_STYLE_LANDSCAPE_BUDDY = 10;
+    protected static final int BATTERY_STYLE_LANDSCAPE_LINE = 11;
+    protected static final int BATTERY_STYLE_LANDSCAPE_MUSKU = 12;
+    protected static final int BATTERY_STYLE_LANDSCAPE_PILL = 13;
+    protected static final int BATTERY_STYLE_LANDSCAPE_SIGNAL = 14;
+    protected static final int BATTERY_STYLE_RLANDSCAPE_STYLE_A = 15;
+    protected static final int BATTERY_STYLE_LANDSCAPE_STYLE_A = 16;
+    protected static final int BATTERY_STYLE_RLANDSCAPE_STYLE_B = 17;
+    protected static final int BATTERY_STYLE_LANDSCAPE_STYLE_B = 18;
+    protected static final int BATTERY_STYLE_LANDSCAPE_IOS15 = 19;
+    protected static final int BATTERY_STYLE_LANDSCAPE_IOS16 = 20;
+    protected static final int BATTERY_STYLE_LANDSCAPE_ORIGAMI = 21;
+    protected static final int BATTERY_STYLE_LANDSCAPE_MIUI_PILL = 22;
 
     @Retention(SOURCE)
     @IntDef({MODE_DEFAULT, MODE_ON, MODE_OFF, MODE_ESTIMATE})
