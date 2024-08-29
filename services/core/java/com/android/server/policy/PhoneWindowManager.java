@@ -257,6 +257,8 @@ import com.android.server.wm.WindowManagerInternal.AppTransitionListener;
 
 import dalvik.system.PathClassLoader;
 
+import com.android.server.SmartPowerOffService;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -786,6 +788,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private LineageHardwareManager mLineageHardware;
 
+    private SmartPowerOffService mSmartPowerOffService;
+    private boolean mSmartPowerOffEnabled;
+
     private class PolicyHandler extends Handler {
 
         private PolicyHandler(Looper looper) {
@@ -983,6 +988,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOZE_TRIGGER_DOUBLETAP), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    "smart_power_off_enabled"), false, this,
                     UserHandle.USER_ALL);
             updateSettings();
         }
@@ -3084,6 +3092,18 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mVolumeAnswerCall = (Settings.System.getIntForUser(resolver,
                     Settings.System.VOLUME_ANSWER_CALL, 0, UserHandle.USER_CURRENT) == 1)
                     && ((mDeviceHardwareWakeKeys) != 0);
+
+            boolean smartPowerOffEnabled = Settings.System.getIntForUser(resolver,
+                    "smart_power_off_enabled", 0,
+                    UserHandle.USER_CURRENT) != 0;
+            if (mSmartPowerOffService != null && mSmartPowerOffEnabled != smartPowerOffEnabled) {
+                mSmartPowerOffEnabled = smartPowerOffEnabled;
+                if (mSmartPowerOffEnabled) {
+                    mWindowManagerFuncs.registerPointerEventListener(mSmartPowerOffService, DEFAULT_DISPLAY);
+                } else {
+                    mWindowManagerFuncs.unregisterPointerEventListener(mSmartPowerOffService, DEFAULT_DISPLAY);
+                }
+            }
 
             // Configure wake gesture.
             boolean wakeGestureEnabledSetting = Settings.Secure.getIntForUser(resolver,
@@ -6330,6 +6350,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mAutofillManagerInternal = LocalServices.getService(AutofillManagerInternal.class);
         mGestureLauncherService = LocalServices.getService(GestureLauncherService.class);
+
+        mSmartPowerOffService = new SmartPowerOffService(mContext);
+        mSmartPowerOffService.start();
     }
 
     /** {@inheritDoc} */
