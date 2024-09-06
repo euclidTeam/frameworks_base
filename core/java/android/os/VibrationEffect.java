@@ -276,22 +276,25 @@ public abstract class VibrationEffect implements Parcelable {
      * @return The desired effect.
      */
     public static VibrationEffect createWaveform(long[] timings, int[] amplitudes, int repeat) {
-        if (timings.length != amplitudes.length) {
-            throw new IllegalArgumentException(
-                    "timing and amplitude arrays must be of equal length"
-                            + " (timings.length=" + timings.length
-                            + ", amplitudes.length=" + amplitudes.length + ")");
-        }
-        List<StepSegment> segments = new ArrayList<>();
-        for (int i = 0; i < timings.length; i++) {
-            float parsedAmplitude = amplitudes[i] == DEFAULT_AMPLITUDE
-                    ? DEFAULT_AMPLITUDE : (float) amplitudes[i] / MAX_AMPLITUDE;
-            segments.add(new StepSegment(parsedAmplitude, /* frequencyHz= */ 0, (int) timings[i]));
-        }
-        VibrationEffect effect = new Composed(segments, repeat);
-        effect.validate();
-        return effect;
+    // Ensure both arrays are of equal length
+    int minLength = Math.min(timings.length, amplitudes.length);
+
+    // Truncate arrays to the smaller size
+    long[] truncatedTimings = Arrays.copyOf(timings, minLength);
+    int[] truncatedAmplitudes = Arrays.copyOf(amplitudes, minLength);
+
+    // Create vibration effect from truncated arrays
+    List<StepSegment> segments = new ArrayList<>();
+    for (int i = 0; i < minLength; i++) {
+        float parsedAmplitude = truncatedAmplitudes[i] == DEFAULT_AMPLITUDE
+                ? DEFAULT_AMPLITUDE : (float) truncatedAmplitudes[i] / MAX_AMPLITUDE;
+        segments.add(new StepSegment(parsedAmplitude, /* frequencyHz= */ 0, (int) truncatedTimings[i]));
     }
+
+    VibrationEffect effect = new Composed(segments, repeat);
+    effect.validate();
+    return effect;
+}
 
     /**
      * Create a predefined vibration effect.
