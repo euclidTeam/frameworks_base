@@ -34,6 +34,7 @@
             android:layout_height="@dimen/settingslib_toolbar_layout_height"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:toolbarId="@id/action_bar"
+            app:expandedTitleGravity="bottom|center_horizontal"
             style="@style/CollapsingToolbarLayoutStyle.SettingsLib">
 
             <Toolbar
