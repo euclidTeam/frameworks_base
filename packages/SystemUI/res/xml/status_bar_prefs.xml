@@ -132,11 +132,10 @@
         android:title="@string/status_bar_vowifi"
         sysui:defValue="false" />
 
-    <com.android.systemui.tuner.BatteryPreference
-        android:title="@string/battery"
+    <com.android.systemui.tuner.StatusBarSwitch
         android:icon="@*android:drawable/ic_battery"
-        android:summary="%s"
-        android:entries="@array/battery_options" />
+        android:key="battery"
+        android:title="@string/battery" />
 
     <com.android.systemui.tuner.ClockPreference
         android:title="@string/tuner_time"
