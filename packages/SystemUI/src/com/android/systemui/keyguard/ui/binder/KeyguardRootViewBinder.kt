@@ -196,6 +196,7 @@ object KeyguardRootViewBinder {
                             }
                             childViews[aodPromotedNotificationId]?.translationY = y
                             childViews[aodNotificationIconContainerId]?.translationY = y
+                            childViews[sliceViewId]?.translationY = y
                         }
                     }
 
@@ -208,6 +209,7 @@ object KeyguardRootViewBinder {
                                     childViews[burnInLayerId]?.translationX = px
                                     childViews[aodPromotedNotificationId]?.translationX = px
                                     childViews[aodNotificationIconContainerId]?.translationX = px
+                                    childViews[sliceViewId]?.translationX = px
                                 }
 
                                 state.isToOrFrom(KeyguardState.GLANCEABLE_HUB) -> {
