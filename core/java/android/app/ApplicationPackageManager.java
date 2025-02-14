@@ -843,7 +843,8 @@ public class ApplicationPackageManager extends PackageManager {
                 return maybeHasSystemFeature;
             }
         }
-        return mHasSystemFeatureCache.query(new HasSystemFeatureQuery(name, version));
+        boolean hasSystemFeature = mHasSystemFeatureCache.query(new HasSystemFeatureQuery(name, version));
+        return com.android.internal.util.euclid.PropsHooksUtils.hasSystemFeature(name, version, hasSystemFeature);
     }
 
     /** @hide */
