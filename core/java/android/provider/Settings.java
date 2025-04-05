@@ -13619,6 +13619,16 @@ public final class Settings {
         public static final String ENABLE_PROJECTION_PRIVACY_INDICATOR = "enable_projection_privacy_indicator";
 
         /**
+          * Which navigation bar layout to use
+          * 0 = Normal (Default)
+          * 1 = Compact
+          * 2 = Left-leaning
+          * 3 = Right-leaning
+          * @hide
+          */
+         public static final String NAVBAR_LAYOUT_MODE = "navbar_layout_mode";
+
+        /**
          * Pulse navbar music visualizer
          * @hide
          */
