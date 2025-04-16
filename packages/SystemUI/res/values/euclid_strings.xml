@@ -54,6 +54,9 @@
     <!-- Name of the data saver status bar icon. -->
     <string name="status_bar_data_saver">Data saver</string>
 
+    <!-- Name of the Internet speed indicator icon. -->
+    <string name="status_bar_network_speed">Internet speed</string>
+
     <!-- Custom QS tiles -->
     <!-- AOD QS tile -->
     <string name="quick_settings_aod_label">AOD</string>
