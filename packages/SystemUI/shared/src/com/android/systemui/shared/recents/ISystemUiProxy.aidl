@@ -177,6 +177,8 @@ interface ISystemUiProxy {
      * Updates contextual education stats when target gesture type is triggered.
      */
     oneway void updateContextualEduStats(boolean isTrackpadGesture, String gestureType) = 58;
+    
+    oneway void notifyGoingToSleepByDoubleClick(int x, int y) = 59;
 
-    // Next id = 59
+    // Next id = 60
 }
