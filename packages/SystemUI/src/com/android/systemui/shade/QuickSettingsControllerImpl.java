@@ -2451,7 +2451,7 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
         void onFlingQsWithoutClick(ValueAnimator animator, float qsExpansionHeight,
                 float target, float vel);
     }
-    
+
     public final void onAppLockerUpdated() {
         NotificationStackScrollLayoutController controller = mNotificationStackScrollLayoutController;
         if (controller == null || controller.getView() == null) {
@@ -2479,5 +2479,9 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
         if (needsUpdate) {
             view.post(() -> view.onAppLockerUpdate());
         }
+    }
+    
+    public boolean isVisible() {
+        return mVisible;
     }
 }
