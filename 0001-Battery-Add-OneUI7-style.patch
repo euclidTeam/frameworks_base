@@ -1,0 +1,99 @@
+diff --git a/packages/SettingsLib/res/values/euclid_strings.xml b/packages/SettingsLib/res/values/euclid_strings.xml
+index 2a1cda2..ac453c7 100644
+--- a/packages/SettingsLib/res/values/euclid_strings.xml
++++ b/packages/SettingsLib/res/values/euclid_strings.xml
+@@ -100,6 +100,16 @@
+     <string name="battery_style_circle">Circle</string>
+     <string name="battery_style_dotted_circle">Dotted Circle</string>
+     <string name="battery_style_landscape">Landscape</string>
++
++    <!-- OneUI7 Battery style -->
++    <string name="battery_style_oneui7">OneUI 7</string>
++
++    <!-- OneUI7 specific paths -->
++    <string name="config_battery_path_oneui7_fill">M2,2 L22,2 L22,20 L2,20 Z</string>
++    <string name="config_battery_path_oneui7_outline">M2,2 L22,2 L22,20 L2,20 Z M4,4 L20,4 L20,18 L4,18 Z</string>
++    <string name="config_battery_path_oneui7_bolt">M10,6 L14,10 L12,10 L14,14 L10,10 L12,10 Z</string>
++
+ </resources>
+
+diff --git a/packages/SettingsLib/src/com/android/settingslib/graph/OneUI7BatteryDrawable.java b/packages/SettingsLib/src/com/android/settingslib/graph/OneUI7BatteryDrawable.java
+new file mode 100644
+--- /dev/null
++++ b/packages/SettingsLib/src/com/android/settingslib/graph/OneUI7BatteryDrawable.java
+@@ -0,0 +1,56 @@
++package com.android.settingslib.graph;
++
++import android.content.Context;
++import android.content.res.Resources;
++import android.graphics.Canvas;
++import android.graphics.Paint;
++import android.graphics.Path;
++import android.graphics.RectF;
++
++import com.android.settingslib.graph.BatteryDrawable;
++import com.android.settingslib.R;
++
++public class OneUI7BatteryDrawable extends BatteryDrawable {
++
++    private final Path mOutlinePath = new Path();
++    private final Path mFillPath = new Path();
++    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
++    private int mLevel = 100;
++
++    public OneUI7BatteryDrawable(Context context, int frameColor) {
++        super(context, frameColor);
++        Resources res = context.getResources();
++        mOutlinePath.addPath(PathParser.createPathFromPathData(
++                res.getString(R.string.config_battery_path_oneui7_outline)));
++        mFillPath.addPath(PathParser.createPathFromPathData(
++                res.getString(R.string.config_battery_path_oneui7_fill)));
++    }
++
++    @Override
++    public void draw(Canvas canvas) {
++        RectF bounds = new RectF(getBounds());
++        canvas.save();
++        canvas.scale(bounds.width() / 24f, bounds.height() / 24f);
++
++        mPaint.setStyle(Paint.Style.STROKE);
++        mPaint.setStrokeWidth(1.5f);
++        mPaint.setColor(mFrameColor);
++        canvas.drawPath(mOutlinePath, mPaint);
++
++        float fillFraction = mLevel / 100f;
++        canvas.clipRect(0, (1 - fillFraction) * 24f, 24f, 24f);
++
++        mPaint.setStyle(Paint.Style.FILL);
++        mPaint.setColor(mFillColor);
++        canvas.drawPath(mFillPath, mPaint);
++
++        canvas.restore();
++    }
++
++    @Override
++    public void setBatteryLevel(int level) {
++        mLevel = level;
++        invalidateSelf();
++    }
++}
+diff --git a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+index fbc3df3..9e5b81a 100644
+--- a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
++++ b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+@@ -90,6 +90,15 @@ public class BatteryMeterView extends FrameLayout implements
+         case BATTERY_STYLE_LANDSCAPE:
+             mDrawable = new LandscapeBatteryDrawable(context, frameColor);
+             break;
++
++        case BATTERY_STYLE_ONEUI7:
++            mDrawable = new OneUI7BatteryDrawable(context, frameColor);
++            break;
++
++        default:
++            mDrawable = new CircleBatteryDrawable(context, frameColor);
++            break;
++
+     }
+ 
+     mDrawable.setBatteryLevel(mLevel);
