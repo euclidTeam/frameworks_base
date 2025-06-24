@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 VoltageOS
+ * Copyright (C) 2025 VoltageOS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,71 @@
 
 package com.android.systemui.qs.dagger.euclid
 
+import android.content.Context
+import com.android.systemui.qs.QsEventLogger
+import com.android.systemui.qs.pipeline.shared.TileSpec
+import com.android.systemui.qs.shared.model.TileCategory
 import com.android.systemui.qs.tileimpl.QSTileImpl
+import com.android.systemui.qs.tiles.CellularTile
+import com.android.systemui.qs.tiles.WifiTile
+import com.android.systemui.qs.tiles.base.shared.model.QSTileConfig;
+import com.android.systemui.qs.tiles.base.shared.model.QSTilePolicy;
+import com.android.systemui.qs.tiles.base.shared.model.QSTileUIConfig;
+import com.android.systemui.res.R
 
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 
 @Module
 interface EuclidModule {
 
-     /** Inject CellularTile into tileMap in QSModule */
+    /** Inject CellularTile into tileMap in QSModule */
     @Binds
     @IntoMap
     @StringKey(CellularTile.TILE_SPEC)
     fun bindCellularTile(cellularTile: CellularTile): QSTileImpl<*>
+
 
     /** Inject WifiTile into tileMap in QSModule */
     @Binds
     @IntoMap
     @StringKey(WifiTile.TILE_SPEC)
     fun bindWifiTile(wifiTile: WifiTile): QSTileImpl<*>
+
+    companion object {
+        @Provides
+        @IntoMap
+        @StringKey(CellularTile.TILE_SPEC)
+        fun provideCellularTileConfig(uiEventLogger: QsEventLogger): QSTileConfig {
+            return QSTileConfig(
+                tileSpec = TileSpec.create(CellularTile.TILE_SPEC),
+                uiConfig = QSTileUIConfig.Resource(
+                    iconRes = R.drawable.ic_swap_vert,
+                    labelRes = R.string.quick_settings_cellular_detail_title
+                ),
+                instanceId = uiEventLogger.getNewInstanceId(),
+                category = TileCategory.CONNECTIVITY
+            )
+        }
+
+        @Provides
+        @IntoMap
+        @StringKey(WifiTile.TILE_SPEC)
+        fun provideWifiTileConfig(uiEventLogger: QsEventLogger, context: Context): QSTileConfig {
+            return QSTileConfig(
+                tileSpec = TileSpec.create(WifiTile.TILE_SPEC),
+		uiConfig = QSTileUIConfig.Resource(
+                    iconRes = context.resources.getIdentifier(
+                        "ic_signal_wifi_transient_animation", "drawable", "android"
+                    ),
+                    labelRes = R.string.quick_settings_wifi_label
+                ),
+                instanceId = uiEventLogger.getNewInstanceId(),
+                category = TileCategory.CONNECTIVITY
+            )                       
+        }
+    }
 }
