@@ -64,7 +64,7 @@ public class QSFooterView extends FrameLayout {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            setBuildText();
+            //setBuildText();
         }
     };*/
 
@@ -180,7 +180,7 @@ public class QSFooterView extends FrameLayout {
         final boolean disabled = (state2 & DISABLE2_QUICK_SETTINGS) != 0;
         if (disabled == mQsDisabled) return;
         mQsDisabled = disabled;
-        updateEverything();
+        //updateEverything();
     }
 
     void updateEverything() {
