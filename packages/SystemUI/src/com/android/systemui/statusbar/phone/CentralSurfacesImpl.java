@@ -219,6 +219,7 @@ import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutController;
+import com.android.systemui.statusbar.NTForbiddenSwipeDownQSController;
 import com.android.systemui.statusbar.phone.dagger.StatusBarPhoneModule;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
@@ -886,6 +887,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
 
         mWindowManager = windowManager;
         mWindowManagerProvider = windowManagerProvider;
+        NTForbiddenSwipeDownQSController.Companion.init(mContext, mKeyguardStateController);
     }
 
     private void initBubbles(Bubbles bubbles) {
