@@ -28,6 +28,7 @@ import com.android.systemui.keyguard.KeyguardSliceProvider;
 import com.android.systemui.people.PeopleProvider;
 import com.android.systemui.startable.Dependencies;
 import com.android.systemui.statusbar.NotificationInsetsModule;
+import com.android.systemui.statusbar.NTForbiddenSwipeDownQSController;
 import com.android.systemui.statusbar.QsFrameTranslateModule;
 import com.android.systemui.statusbar.phone.ConfigurationForwarder;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -178,6 +179,9 @@ public interface SysUIComponent {
      * Returns {@link CoreStartable} dependencies if there are any.
      */
     @Dependencies Map<Class<?>, Set<Class<? extends CoreStartable>>> getStartableDependencies();
+
+    @SysUISingleton
+    NTForbiddenSwipeDownQSController forbiddenSwipeDownQSController();
 
     /**
      * Member injection into the supplied argument.
