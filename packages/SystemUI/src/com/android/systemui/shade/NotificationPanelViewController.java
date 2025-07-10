@@ -667,7 +667,8 @@ public final class NotificationPanelViewController implements
             MSDLPlayer msdlPlayer,
             BrightnessMirrorShowingRepository brightnessMirrorShowingRepository,
             BlurConfig blurConfig,
-            Lazy<ShadeDisplaysRepository> shadeDisplaysRepository) {
+            Lazy<ShadeDisplaysRepository> shadeDisplaysRepository,
+            Context context) {
         mBlurConfig = blurConfig;
         SceneContainerFlag.assertInLegacyMode();
         keyguardStateController.addCallback(new KeyguardStateController.Callback() {
@@ -851,6 +852,7 @@ public final class NotificationPanelViewController implements
         mIsBrightnessMirrorShowing.setValue(
                 mBrightnessMirrorShowingRepository.isShowing().getValue()
         );
+        com.android.systemui.util.NTAppLockerHelper.init(context.getApplicationContext());
         onFinishInflate();
         keyguardUnlockAnimationController.addKeyguardUnlockAnimationListener(
                 new KeyguardUnlockAnimationController.KeyguardUnlockAnimationListener() {

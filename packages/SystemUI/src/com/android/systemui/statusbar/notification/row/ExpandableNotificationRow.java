@@ -154,6 +154,7 @@ import com.android.systemui.statusbar.policy.dagger.RemoteInputViewSubcomponent;
 import com.android.systemui.util.Compile;
 import com.android.systemui.util.DumpUtilsKt;
 import com.android.systemui.util.ListenerSet;
+import com.android.systemui.util.NTAppLockerHelper;
 import com.android.wm.shell.shared.animation.PhysicsAnimator;
 
 import java.io.PrintWriter;
@@ -463,6 +464,10 @@ public class ExpandableNotificationRow extends ActivatableNotificationView
             if (shouldLogExpandClickMetric) {
                 mMetricsLogger.action(MetricsEvent.ACTION_NOTIFICATION_EXPANDER, nowExpanded);
             }
+            if (!isAppLocked() || mOnClickListener == null) {
+                return;
+            }
+            mOnClickListener.onClick(this);
         }
     }
 
@@ -3217,6 +3222,8 @@ public class ExpandableNotificationRow extends ActivatableNotificationView
             return mGuts.getIntrinsicHeight();
         } else if ((isChildInGroup() && !isGroupExpanded())) {
             return mPrivateLayout.getMinHeight();
+        } else if (isAppLocked()) {
+            return getMinHeight();
         } else if (mSensitive && mHideSensitiveForIntrinsicHeight) {
             return getMinHeight();
         } else if (mIsSummaryWithChildren) {
@@ -3516,7 +3523,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView
             return;
         }
         boolean oldShowingPublic = mShowingPublic;
-        mShowingPublic = mSensitive && hideSensitive;
+        mShowingPublic = (mSensitive && hideSensitive) || isAppLocked();
         boolean isShowingLayoutNotChanged = mShowingPublic == oldShowingPublic;
         if (mShowingPublicInitialized && isShowingLayoutNotChanged) {
             return;
@@ -3635,6 +3642,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView
     }
 
     private boolean shouldShowPublic() {
+        if (isAppLocked()) {
+            return true;
+        }
         return mSensitive && mHideSensitiveForIntrinsicHeight;
     }
 
@@ -4714,6 +4724,12 @@ public class ExpandableNotificationRow extends ActivatableNotificationView
             return;
         }
         mLogger.logRemoveTransientRow(row.getLoggingKey(), mLoggingKey);
+    }
+
+    public boolean isAppLocked() {
+        return mEntry != null 
+            && mEntry.getSbn() != null 
+            && NTAppLockerHelper.Companion.get().isAppLocked(mEntry.getSbn().getPackageName());
     }
 
     /** Set whether this notification is currently used to animate a launch. */

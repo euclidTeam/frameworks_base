@@ -123,6 +123,7 @@ import com.android.internal.os.BackgroundThread;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.ClonedAppsUtils;
 import com.android.internal.util.CollectionUtils;
+import com.android.internal.util.NTAppLockerHelper;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.SizedInputStream;
 import com.android.server.LocalServices;
@@ -1030,6 +1031,12 @@ public class LauncherAppsService extends SystemService {
                 if (ClonedAppsUtils.isClonedUser(user.getIdentifier())
                     && ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0 
                         || (appInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)) {
+                    continue;
+                }
+                if(!NTAppLockerHelper.isInitialized()) {
+                    NTAppLockerHelper.init(mContext);
+                }
+                if (NTAppLockerHelper.get().isPackageHidden(packageName)) {
                     continue;
                 }
                 results.add(new LauncherActivityInfoInternal(ri.activityInfo,

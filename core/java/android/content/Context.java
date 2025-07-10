@@ -6895,6 +6895,9 @@ public abstract class Context {
      * @hide
      */
     public static final String DYNAMIC_INSTRUMENTATION_SERVICE = "dynamic_instrumentation";
+    
+    /** @hide */
+    public static final String APP_LOCK_SERVICE = "app_lock";
 
     /**
      * Determine whether the given permission is allowed for a particular
