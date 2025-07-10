@@ -489,6 +489,7 @@ import com.android.server.wm.ActivityTaskManagerService;
 import com.android.server.wm.SurfaceAnimationThread;
 import com.android.server.wm.WindowEventDispatcher;
 import com.android.server.wm.GameSpaceService;
+import com.android.server.wm.AppLockManagerService;
 import com.android.server.wm.WindowManagerInternal;
 import com.android.server.wm.WindowManagerService;
 import com.android.server.wm.WindowProcessController;
@@ -5322,6 +5323,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         t.traceEnd();
         ProcessFreezerManager.getInstance().init(mFreezer);
         GameSpaceService.init(mContext, this);
+        AppLockManagerService.init(mContext, mActivityTaskManager);
     }
 
     private static boolean isUartEnabled() {

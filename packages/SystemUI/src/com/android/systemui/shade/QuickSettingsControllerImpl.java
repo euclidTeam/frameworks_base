@@ -41,6 +41,7 @@ import android.graphics.Region;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 import android.util.IndentingPrintWriter;
 import android.util.Log;
 import android.util.MathUtils;
@@ -90,6 +91,7 @@ import com.android.systemui.statusbar.NotificationShadeDepthController;
 import com.android.systemui.statusbar.PulseExpansionHandler;
 import com.android.systemui.statusbar.QsFrameTranslateController;
 import com.android.systemui.statusbar.StatusBarState;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.domain.interactor.ActiveNotificationsInteractor;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.AmbientState;
@@ -109,6 +111,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.SplitShadeStateController;
 import com.android.systemui.util.LargeScreenUtils;
 import com.android.systemui.util.NTBoosterController;
+import com.android.systemui.util.NTAppLockerHelper;
 import com.android.systemui.util.kotlin.JavaAdapter;
 import com.android.systemui.utils.windowmanager.WindowManagerProvider;
 
@@ -514,6 +517,7 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
         mJavaAdapter.alwaysCollectFlow(
                 mCommunalTransitionViewModelLazy.get().isUmoOnCommunal(),
                 this::setShouldUpdateSquishinessOnMedia);
+        NTAppLockerHelper.get().setQsController(this);
     }
 
     private void initNotificationStackScrollLayoutController() {
@@ -1134,6 +1138,8 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
 
         // Update the light bar
         mLightBarController.setQsExpanded(mFullyExpanded);
+        
+        NTAppLockerHelper.get().onPanelExpandedChanged(mFullyExpanded);
 
         // Update full screen state
         setQsFullScreen(/* qsFullScreen = */ mFullyExpanded && !mSplitShadeEnabled);
@@ -2301,6 +2307,7 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
 
             mQs.setScrollListener(mQsScrollListener);
             mTranslucentObserver.onChange(true);
+            NTAppLockerHelper.get().registerListener();
             updateExpansion();
         }
 
@@ -2309,6 +2316,7 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
         public void onFragmentViewDestroyed(String tag, Fragment fragment) {
             mPanelView.getContext().getContentResolver().unregisterContentObserver(
                     mTranslucentObserver);
+            NTAppLockerHelper.get().onDestroy();
             // Manual handling of fragment lifecycle is only required because this bridges
             // non-fragment and fragment code. Once we are using a fragment for the notification
             // panel, mQs will not need to be null cause it will be tied to the same lifecycle.
@@ -2516,5 +2524,34 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
     
     public boolean isVisible() {
         return mVisible;
+   }
+
+       public final void onAppLockerUpdated() {
+        NotificationStackScrollLayoutController controller = mNotificationStackScrollLayoutController;
+        if (controller == null || controller.getView() == null) {
+            return;
+        }
+
+        NotificationStackScrollLayout view = controller.getView();
+        int childCount = view.getChildCount();
+
+        boolean needsUpdate = false;
+
+        for (int i = 0; i < childCount; i++) {
+            View child = view.getChildAt(i);
+            if (child instanceof ExpandableNotificationRow) {
+                NotificationEntry entry = ((ExpandableNotificationRow) child).getEntry();
+                StatusBarNotification sbn = entry.getSbn();
+                String packageName = sbn.getPackageName();
+                int uid = sbn.getUid();
+                if (!NTAppLockerHelper.get().isAppLocked(packageName)) {
+                    needsUpdate = true;
+                }
+            }
+        }
+
+        if (needsUpdate) {
+            view.post(() -> view.onAppLockerUpdate());
+        }
     }
 }
