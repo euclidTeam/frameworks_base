@@ -360,4 +360,9 @@ public interface CentralSurfaces extends Dumpable, LifecycleOwner, CoreStartable
             ExpandableNotificationRow associatedView);
     
     default void unlockedScreenOffAnimationCancel() {}
+
+    default boolean shouldSuppressFullScreenIntent() {
+        return false;
+    }
+
 }
