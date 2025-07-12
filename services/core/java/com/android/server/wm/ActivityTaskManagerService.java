@@ -3074,7 +3074,7 @@ public class ActivityTaskManagerService extends IActivityTaskManager.Stub {
                     keyguardShowing);
             mH.sendMessage(msg);
         }
-        AppLockUtils.setKeyguardDoneLocked(keyguardShowing);
+        WindowEventHelper.setKeyguardDoneLocked(keyguardShowing);
         // Always reset the state regardless of keyguard-showing change, because that means the
         // unlock is either completed or canceled.
         if ((mDemoteTopAppReasons & DEMOTE_TOP_REASON_DURING_UNLOCKING) != 0) {
