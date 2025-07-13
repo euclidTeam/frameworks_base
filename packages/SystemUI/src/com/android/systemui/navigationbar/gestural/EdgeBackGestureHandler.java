@@ -316,6 +316,14 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
             new NavigationEdgeBackPlugin.BackCallback() {
                 @Override
                 public void triggerBack() {
+                    if (EdgeBackGestureHandlerEx.Companion.get().getIfNeedInterceptBack()) {
+                        Log.d(TAG, "Need to intercept back because of Game mode");
+                        EdgeBackGestureHandlerEx.Companion.get().resetBackIntercept();
+                        EdgeBackGestureHandlerEx.Companion.get().setBackInterceptTime();
+                        EdgeBackGestureHandlerEx.Companion.get().showToast(mUiThreadContext.getExecutor(), mContext);
+                        return;
+                    }
+                    EdgeBackGestureHandlerEx.Companion.get().hideToast(mUiThreadContext.getExecutor());
                     // Notify FalsingManager that an intentional gesture has occurred.
                     mFalsingManager.isFalseTouch(BACK_GESTURE);
                     // Only inject back keycodes when ahead-of-time back dispatching is disabled.
@@ -1141,6 +1149,7 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
                 mAllowGesture = isBackAllowedCommon && !mUsingThreeButtonNav && isWithinInsets
                         && isWithinTouchRegion(ev) && !isButtonPressFromTrackpad(ev);
             }
+            EdgeBackGestureHandlerEx.Companion.get().shouldInterceptBack(mContext);
             if (mAllowGesture) {
                 mEdgeBackPlugin.setIsLeftPanel(mIsOnLeftEdge);
                 mEdgeBackPlugin.onMotionEvent(ev);
@@ -1219,7 +1228,7 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
                         mLogGesture = false;
                         return;
                     } else if (dx > dy && dx > mTouchSlop) {
-                        if (mAllowGesture) {
+                        if (mAllowGesture && !EdgeBackGestureHandlerEx.Companion.get().getIfNeedInterceptBack()) {
                             if (!predictiveBackDelayWmTransition() && mBackAnimation != null) {
                                 mBackAnimation.onThresholdCrossed();
                             }
@@ -1264,13 +1273,14 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
     }
 
     private void dispatchToBackAnimation(MotionEvent event) {
-        if (mBackAnimation != null) {
-            mBackAnimation.onBackMotion(
-                    /* touchX = */ event.getX(),
-                    /* touchY = */ event.getY(),
-                    /* keyAction = */ event.getActionMasked(),
-                    /* swipeEdge = */ mIsOnLeftEdge ? BackEvent.EDGE_LEFT : BackEvent.EDGE_RIGHT);
+        if (mBackAnimation == null || EdgeBackGestureHandlerEx.Companion.get().getIfNeedInterceptBack()) {
+            return;
         }
+        mBackAnimation.onBackMotion(
+                /* touchX = */ event.getX(),
+                /* touchY = */ event.getY(),
+                /* keyAction = */ event.getActionMasked(),
+                /* swipeEdge = */ mIsOnLeftEdge ? BackEvent.EDGE_LEFT : BackEvent.EDGE_RIGHT);
     }
 
     private void updateDisabledForQuickstep(Configuration newConfig) {
