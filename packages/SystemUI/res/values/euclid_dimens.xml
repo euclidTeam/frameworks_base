@@ -103,4 +103,7 @@
 
     <!-- Ringer QS tile -->
     <dimen name="qs_ringer_tile_dot_radius">2dp</dimen>
+
+    <!-- Pulse -->
+    <dimen name="visualizer_pulse_height">300dp</dimen>
 </resources>
