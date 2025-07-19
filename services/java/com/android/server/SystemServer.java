@@ -2831,6 +2831,12 @@ public final class SystemServer implements Dumpable {
                 mSystemServiceManager.startService(BackgroundInstallControlService.class);
                 t.traceEnd();
             }
+        
+            if (context.getResources().getBoolean(R.bool.config_dozeAlwaysOnDisplayAvailable)) {
+                t.traceBegin("AODScheduleService");
+                mSystemServiceManager.startService(com.android.server.display.AODScheduleService.class);
+                t.traceEnd();
+            }
 
             // CustomDeviceConfigService
             t.traceBegin("StartCustomDeviceConfigService");
