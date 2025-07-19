@@ -2838,6 +2838,12 @@ public final class SystemServer implements Dumpable {
             t.traceBegin("StartHealthService");
             mSystemServiceManager.startService(HealthInterfaceService.class);
             t.traceEnd();
+
+            if (context.getResources().getBoolean(R.bool.config_dozeAlwaysOnDisplayAvailable)) {
+                t.traceBegin("AODScheduleService");
+                mSystemServiceManager.startService(com.android.server.display.AODScheduleService.class);
+                t.traceEnd();
+            }
         }
 
         t.traceBegin("StartMediaProjectionManager");
