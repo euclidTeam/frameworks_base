@@ -641,13 +641,16 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
 
     @SuppressLint("MissingPermission")
     private void sendBackEvent(int action) {
+        int displayId = (mBackTransitionObserver.mDisplayId == -1) 
+            ? mContext.getDisplay().getDisplayId()
+            : mBackTransitionObserver.mDisplayId;
         final long when = SystemClock.uptimeMillis();
         final KeyEvent ev = new KeyEvent(when, when, action, KeyEvent.KEYCODE_BACK, 0 /* repeat */,
                 0 /* metaState */, KeyCharacterMap.VIRTUAL_KEYBOARD, 0 /* scancode */,
                 KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
                 InputDevice.SOURCE_KEYBOARD);
 
-        ev.setDisplayId(mContext.getDisplay().getDisplayId());
+        ev.setDisplayId(displayId);
         if (!mContext.getSystemService(InputManager.class)
                 .injectInputEvent(ev, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC)) {
             ProtoLog.e(WM_SHELL_BACK_PREVIEW, "Inject input event fail");
@@ -1818,6 +1821,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
     // Record the latest back gesture happen on which task.
     static class BackTransitionObserver implements Transitions.TransitionObserver {
         int mFocusedTaskId = INVALID_TASK_ID;
+        int mDisplayId = -1;
         IBinder mFocusTaskMonitorToken;
         private BackTransitionHandler mBackTransitionHandler;
         void setBackTransitionHandler(BackTransitionHandler handler) {
@@ -1825,7 +1829,10 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
         }
 
         void update(int focusedTaskId) {
-            mFocusedTaskId = focusedTaskId;
+            if (mFocusedTaskId != focusedTaskId) {
+                mFocusedTaskId = focusedTaskId;
+                mDisplayId = -1;
+            }
         }
 
         @Override
@@ -1838,6 +1845,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
             for (int i = info.getChanges().size() - 1; i >= 0; --i) {
                 final TransitionInfo.Change c = info.getChanges().get(i);
                 if (c.getTaskInfo() != null && c.getTaskInfo().taskId == mFocusedTaskId) {
+                    mDisplayId = c.getTaskInfo().displayId;
                     mFocusTaskMonitorToken = transition;
                     break;
                 }
@@ -1845,6 +1853,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
             // Transition happen but the task isn't involved, reset.
             if (mFocusTaskMonitorToken == null) {
                 mFocusedTaskId = INVALID_TASK_ID;
+                mDisplayId = -1;
             }
         }
 
@@ -1862,6 +1871,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
         public void onTransitionFinished(@NonNull IBinder transition, boolean aborted) {
             if (mFocusTaskMonitorToken == transition) {
                 mFocusedTaskId = INVALID_TASK_ID;
+                mDisplayId = -1;
             }
             if (mBackTransitionHandler.mClosePrepareTransition == transition) {
                 mBackTransitionHandler.mClosePrepareTransition = null;
