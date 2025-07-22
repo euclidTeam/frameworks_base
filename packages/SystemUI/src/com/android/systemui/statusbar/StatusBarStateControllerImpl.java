@@ -63,6 +63,7 @@ import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.util.Compile;
 import com.android.systemui.util.kotlin.JavaAdapter;
 import com.android.systemui.util.NTBoosterController;
+import com.android.systemui.util.ScrimUtils;
 
 import dagger.Lazy;
 
@@ -296,6 +297,7 @@ public class StatusBarStateControllerImpl implements
             for (RankedListener rl : new ArrayList<>(mListeners)) {
                 rl.mListener.onStateChanged(mState);
             }
+            ScrimUtils.get().setBarState(mState);
 
             for (RankedListener rl : new ArrayList<>(mListeners)) {
                 rl.mListener.onStatePostChange();
