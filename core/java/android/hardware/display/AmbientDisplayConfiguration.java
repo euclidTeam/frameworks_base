@@ -95,6 +95,11 @@ public class AmbientDisplayConfiguration {
     }
 
     /** @hide */
+    public boolean pulseOnNotificationEnabledOverride(int user) {
+        return boolSettingDefaultOff("doze_pulse_on_notification", user);
+    }
+
+    /** @hide */
     public boolean shouldPulsePickSensorEvent(int user) {
         return boolSettingDefaultOff("doze_pulse_on_pickup", user);
     }
@@ -111,7 +116,8 @@ public class AmbientDisplayConfiguration {
 
     /** @hide */
     public boolean pulseOnNotificationEnabled(int user) {
-        return boolSettingDefaultOn(Settings.Secure.DOZE_ENABLED, user)
+        return pulseOnNotificationEnabledOverride(user) 
+                && ambientDisplayAvailable() 
                 && pulseOnNotificationAvailable();
     }
 
