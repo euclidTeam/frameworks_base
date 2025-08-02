@@ -19685,7 +19685,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         String path = null;
         String cpuset = null;
         String bgCpuset = SystemProperties.get("persist.sys.euclid_cpu_limit_bg", "0-1");
-        String fgCpuSet = SystemProperties.get("persist.sys.euclid_cpu_unlimit_ui", "0-7");
+        String fgCpuSet = SystemProperties.get("persist.sys.euclid_cpu_limit_ui", "0-4");
 
         switch (cgroup) {
             case "bg":
@@ -19702,6 +19702,10 @@ public class ActivityManagerService extends IActivityManager.Stub
                 break;
             case "sys-bg":
                 path = "/dev/cpuset/system-background/cpus";
+                cpuset = bgCpuset;
+                break;
+            case "cam":
+                path = "/dev/cpuset/camera-daemon/cpus";
                 cpuset = bgCpuset;
                 break;
             default:
@@ -19861,7 +19865,8 @@ public class ActivityManagerService extends IActivityManager.Stub
         setPerformanceMode(true, reason);
 
         if (reason != null && reason.toLowerCase().contains("launch")) {
-            adjustCpusetCpus("fg", duration);
+            String fgboost = SystemProperties.get("persist.sys.euclid_cpu_unlimit_ui", "0-7");
+            adjustCpusetCpus("/dev/cpuset/foreground/cpus", fgboost, duration);
         }
 
         adjustCpusetCpus("bg", duration);
