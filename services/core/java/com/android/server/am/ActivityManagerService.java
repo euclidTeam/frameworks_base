@@ -2264,6 +2264,7 @@ public class ActivityManagerService extends IActivityManager.Stub
             if (phase == PHASE_SYSTEM_SERVICES_READY) {
                 mService.mBatteryStatsService.systemServicesReady();
                 mService.mServices.systemServicesReady();
+                mService.startCustomServices();
             } else if (phase == PHASE_ACTIVITY_MANAGER_READY) {
                 mService.mBroadcastController.startBroadcastObservers();
             } else if (phase == PHASE_THIRD_PARTY_APPS_CAN_START) {
@@ -5314,9 +5315,6 @@ public class ActivityManagerService extends IActivityManager.Stub
         showMteOverrideNotificationIfActive();
 
         t.traceEnd();
-        ProcessFreezerManager.getInstance().init(mFreezer);
-        GameSpaceService.init(mContext, this);
-        AppLockManagerService.init(mContext, mActivityTaskManager);
     }
 
     private void showConsoleNotificationIfActive() {
@@ -19613,7 +19611,14 @@ public class ActivityManagerService extends IActivityManager.Stub
         }
         return token;
     }
-    
+
+    public void startCustomServices() {
+        // TODO: service holder with lifecycle/phase hooks for race conditions
+        ProcessFreezerManager.getInstance().init(mFreezer);
+        AppLockManagerService.init(mContext, mActivityTaskManager);
+        GameSpaceService.init(mContext, this);
+    }
+
     public ProcessRecord getProcessRecord(String str) {
         ProcessRecord processRecordLocked = null;
         synchronized (mProcLock) {
