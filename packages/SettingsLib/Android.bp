@@ -33,7 +33,6 @@ android_library {
         "SettingsLibBarChartPreference",
         "SettingsLibBulletPreference",
         "SettingsLibButtonPreference",
-        "SettingsLibCardPreference",
         "SettingsLibCollapsingToolbarBaseActivity",
         "SettingsLibDeviceStateRotationLock",
         "SettingsLibDisplayUtils",
