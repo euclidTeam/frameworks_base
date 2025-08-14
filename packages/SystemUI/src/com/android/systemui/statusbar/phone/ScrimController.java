@@ -1170,6 +1170,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
         if (mScrimBehind != null) {
             dispatchBackScrimState(mScrimBehind.getViewAlpha());
+            com.android.systemui.util.ScrimUtils.getInstance(mScrimBehind.getContext()).onScrimDispatched();
         }
     }
 
