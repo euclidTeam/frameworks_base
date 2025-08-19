@@ -19706,8 +19706,11 @@ public class ActivityManagerService extends IActivityManager.Stub
                 cpuset = bgCpuset;
                 break;
             case "cam":
+                path = "/dev/cpuset/camera-daemon/cpus";
+                cpuset = bgCpuset;
+                break;
             default:
-                Log.w("adjustCpusetCpus", "Skipping adjustment");
+                Log.w("adjustCpusetCpus", "Unknown cgroup: " + cgroup);
                 return;
         }
 
