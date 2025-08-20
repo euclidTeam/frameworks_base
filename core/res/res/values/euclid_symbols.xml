@@ -46,6 +46,11 @@
     <java-symbol type="string" name="charging_control_notification_content_target" />
     <java-symbol type="string" name="charging_control_notification_content_target_reached" />
 
+    <!-- Charging speed -->
+    <java-symbol type="string" name="charging_speed" />
+    <java-symbol type="array" name="charging_speed_entries" />
+    <java-symbol type="array" name="charging_speed_values" />
+
     <!-- LiveDisplay -->
     <java-symbol type="string" name="live_display_title" />
     <java-symbol type="string" name="live_display_hint" />
