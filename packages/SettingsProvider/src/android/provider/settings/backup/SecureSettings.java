@@ -307,6 +307,8 @@ public class SecureSettings {
         Settings.Secure.SELECTED_SPELL_CHECKER_SUBTYPE,
         Settings.Secure.TORCH_DOUBLE_TAP_POWER_GESTURE_ENABLED,
         Settings.Secure.TORCH_LONG_PRESS_POWER,
-        Settings.Secure.VPN_ENFORCE_DNS
+        Settings.Secure.VPN_ENFORCE_DNS,
+        Settings.Secure.QS_SHOW_DATA_USAGE,
+        Settings.Secure.QS_DATA_USAGE_CYCLE_TYPE,
     };
 }

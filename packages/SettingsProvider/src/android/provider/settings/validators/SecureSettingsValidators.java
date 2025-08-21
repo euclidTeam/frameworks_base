@@ -486,5 +486,7 @@ public class SecureSettingsValidators {
         VALIDATORS.put(Secure.FEATURE_TOUCH_HOVERING, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.SWAP_CAPACITIVE_KEYS, BOOLEAN_VALIDATOR);
         VALIDATORS.put(Secure.HIDE_APPLIST, ANY_STRING_VALIDATOR);
+        VALIDATORS.put(Secure.QS_SHOW_DATA_USAGE, BOOLEAN_VALIDATOR);
+        VALIDATORS.put(Secure.QS_DATA_USAGE_CYCLE_TYPE, new InclusiveIntegerRangeValidator(0, 1));
     }
 }
