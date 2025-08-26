@@ -8419,6 +8419,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                             THREAD_PRIORITY_TOP_APP_BOOST);
                     }
                 }
+                mBoostAdjuster.boostHomeProcess(proc);
             } else {
                 if (DEBUG_OOM_ADJ) {
                     Slog.d("UI_FIFO", "Didn't set thread from setRenderThread? "
