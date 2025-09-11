@@ -1833,6 +1833,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, CoreSt
                             ActiveUnlockConfig.ActiveUnlockRequestOrigin.BIOMETRIC_FAIL,
                             "fingerprintFailure");
                     handleFingerprintAuthFailed();
+                    com.android.systemui.util.NTBoosterController.get().releaseUnlockAnimationBoost();
                 }
 
                 @Override

@@ -6731,6 +6731,7 @@ public class AudioService extends IAudioService.Stub
                         Log.w(TAG, "setMode link does not exist ...");
                     }
                 }
+                SystemProperties.set("dalvik.vm.dex2oat-threads", "2");
             } else {
                 if (currentModeHandler != null) {
                     currentModeHandler.setMode(mode);
@@ -6752,6 +6753,9 @@ public class AudioService extends IAudioService.Stub
                     if (DEBUG_MODE) {
                         Log.v(TAG, "setMode(" + mode + ") adding handler for pid=" + pid);
                     }
+                }
+                if (mode == 1) {
+                    SystemProperties.set("dalvik.vm.dex2oat-threads", "1");
                 }
                 if (mode == AudioSystem.MODE_IN_COMMUNICATION) {
                     // Force active state when entering/updating the stack to avoid glitches when
