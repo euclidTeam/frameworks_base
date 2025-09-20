@@ -732,6 +732,8 @@ public class ActivityManagerService extends IActivityManager.Stub
 
     /** Whether some specified important processes are allowed to use FIFO priority. */
     boolean mAllowSpecifiedFifoScheduling = true;
+    
+    private boolean expediteActivityLaunchOnColdStart = true;
 
     @GuardedBy("mStrictModeCallbacks")
     private final SparseArray<IUnsafeIntentStrictModeCallback>
@@ -4931,7 +4933,7 @@ public class ActivityManagerService extends IActivityManager.Stub
             mProcessesOnHold.remove(app);
 
             // See if the top visible activity is waiting to run in this process...
-            if (com.android.server.am.Flags.expediteActivityLaunchOnColdStart()) {
+            if (expediteActivityLaunchOnColdStart) {
                 if (normalMode) {
                     mAtmInternal.attachApplication(app.getWindowProcessController());
                 }
@@ -5008,7 +5010,7 @@ public class ActivityManagerService extends IActivityManager.Stub
             boolean badApp = false;
             boolean didSomething = false;
 
-            if (!com.android.server.am.Flags.expediteActivityLaunchOnColdStart()) {
+            if (!expediteActivityLaunchOnColdStart) {
                 final boolean normalMode = mProcessesReady || isAllowedWhileBooting(app.info);
 
                 if (normalMode) {
