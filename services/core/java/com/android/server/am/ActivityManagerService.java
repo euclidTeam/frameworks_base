@@ -435,6 +435,7 @@ import com.android.internal.util.FrameworkStatsLog;
 import com.android.internal.util.MemInfoReader;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.function.pooled.PooledLambda;
+import com.android.server.AxExtServiceFactory;
 import com.android.server.AlarmManagerInternal;
 import com.android.server.BootReceiver;
 import com.android.server.DeviceIdleInternal;
@@ -520,6 +521,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -773,7 +775,6 @@ public class ActivityManagerService extends IActivityManager.Stub
     private AccessCheckDelegateHelper mAccessCheckDelegateHelper;
     
     private final BoostAdjuster mBoostAdjuster;
-    private final MemoryManager mMemoryManager;
     private final TaskProfiler mTaskProfiler = new TaskProfiler();
     private final ProcessManager mProcessManager = new ProcessManager();
 
@@ -2488,7 +2489,6 @@ public class ActivityManagerService extends IActivityManager.Stub
         sCreatorTokenCacheCleaner = new Handler(mHandlerThread.getLooper());
         mSwipeToScreenshotObserver = null;
         mBoostAdjuster = new BoostAdjuster(this);
-        mMemoryManager = new MemoryManager(this);
     }
 
     // Note: This method is invoked on the main thread but may need to attach various
@@ -2617,7 +2617,6 @@ public class ActivityManagerService extends IActivityManager.Stub
         }
         mSwipeToScreenshotObserver = new SwipeToScreenshotObserver(mHandler, mContext);
         mBoostAdjuster = new BoostAdjuster(this);
-        mMemoryManager = new MemoryManager(this);
     }
 
     void setBroadcastQueueForTest(BroadcastQueue broadcastQueue) {
@@ -3313,6 +3312,71 @@ public class ActivityManagerService extends IActivityManager.Stub
         return mActivityTaskManager.startActivityFromRecents(taskId, bOptions);
     }
 
+    public int startActivityAsUserEmpty(Bundle options) {
+        final boolean DEBUG_NMM = NtMemoryManagerImpl.DEBUG;
+        ArrayList<String> pApps = options.getStringArrayList("start_empty_apps");
+        boolean isFromHighUsage = options.getBoolean("fork_high", false);
+        if (DEBUG_NMM) Slog.d("NtMemoryManager", "prefork attempt pApps= " + pApps + " isFromHighUsage=" + isFromHighUsage);
+        if (pApps != null && pApps.size() > 0) {
+            Iterator<String> apps_itr = pApps.iterator();
+            while (apps_itr.hasNext()) {
+                ProcessRecord empty_app = null;
+                String app_str = apps_itr.next();
+                if (app_str == null) {
+                    if (DEBUG_NMM) Slog.d("NtMemoryManager", "app is null. skipping pre-fork");
+                    continue;
+                }
+                synchronized (this) {
+                    Intent intent_l = null;
+                    try {
+                        intent_l = mContext.getPackageManager().getLaunchIntentForPackage(app_str);
+                        if (intent_l == null) {
+                            if (DEBUG_NMM) Slog.d("NtMemoryManager", "intent null. skipping pre-fork");
+                            continue;
+                        }
+                        ActivityInfo aInfo = mActivityTaskManager.mTaskSupervisor.resolveActivity(intent_l, null,
+                                                                          0, null, 0, 0, Binder.getCallingPid());
+                        if (aInfo == null) {
+                            if (DEBUG_NMM) Slog.d("NtMemoryManager", "aiInfo is null. skipping pre-fork");
+                            continue;
+                        }
+                        if (isFromHighUsage) {
+                            ProcessRecord pr = mProcessList.getProcessRecordLocked(
+                                    app_str, aInfo.applicationInfo.uid);
+                            if (pr != null) {
+                                if (DEBUG_NMM) Slog.d("NtMemoryManager", pr.processName + " already exist, don't need to pre-fork");
+                                continue;
+                            }
+                        }
+                        if (isFromHighUsage || AxExtServiceFactory.getMemoryManager().isEnablePreFork(mAppProfiler.getLastMemoryLevelLocked())) {
+                            if (DEBUG_NMM) Slog.d("NtMemoryManager", "Start pre fork for " + app_str);
+                            empty_app = startProcessLocked(
+                                app_str,
+                                aInfo.applicationInfo,
+                                false /* knownToBeDead */,
+                                0 /* intentFlags */,
+                               sNullHostingRecord /* hostingRecord */,
+                               ZYGOTE_POLICY_FLAG_EMPTY /* zygotePolicyFlags */,
+                               false /* allowWhileBooting */,
+                               false /* isolated */);
+                            if (empty_app != null) {
+                                updateOomAdjLocked(empty_app, OOM_ADJ_REASON_SYSTEM_INIT);
+                                if (isFromHighUsage) {
+                                    empty_app.isForkedFromHighUsed = true;
+                                    if (DEBUG_NMM) Slog.d("NtMemoryManager", "start high used after booting: " + app_str);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        if (DEBUG_PROCESSES)
+                            Slog.w(TAG, "Exception raised trying to start app as empty " + e);
+                    }
+                }
+            }
+        }
+        return 1;
+    }
+
     /**
      * This is the internal entry point for handling Activity.finish().
      *
@@ -3490,6 +3554,9 @@ public class ActivityManagerService extends IActivityManager.Stub
                         + ProcessList.makeOomAdjString(setAdj, true) + " "
                         + ProcessList.makeProcStateString(setProcState), app.info.uid);
                 mAppProfiler.setAllowLowerMemLevelLocked(true);
+                if (app.mState.hasShownUi() && AxExtServiceFactory.getAppUsageManager().isHighUsedPackages(app.info.packageName)) {
+                    AxExtServiceFactory.getAppUsageManager().appDied(app);
+                }
             } else {
                 // Note that we always want to do oom adj to update our state with the
                 // new number of procs.
@@ -5286,7 +5353,6 @@ public class ActivityManagerService extends IActivityManager.Stub
             // Start PSI monitoring in LMKD if it was skipped earlier.
             ProcessList.startPsiMonitoringAfterBoot();
             mTaskProfiler.initTaskProfiles();
-            mMemoryManager.updateExtraFree();
             
             mHandler.postDelayed(() -> {
                 SystemProperties.set("persist.sys.axion_boot_completed", "1");
@@ -9262,6 +9328,8 @@ public class ActivityManagerService extends IActivityManager.Stub
             t.traceEnd(); // componentAlias
             mProcessManager.systemReady(this, mContext);
             mBoostAdjuster.systemReady(mContext);
+            AxExtServiceFactory.getAppUsageManager().systemReady(this.mContext);
+            AxExtServiceFactory.getMemoryManager().systemReady(this, this.mWindowManager, this.mContext);
             t.traceEnd(); // PhaseActivityManagerReady
         }
     }
@@ -17093,6 +17161,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                             && !pr.mState.hasStartedServices()) {
                         pr.killLocked("remove task", ApplicationExitInfo.REASON_USER_REQUESTED,
                                 ApplicationExitInfo.SUBREASON_REMOVE_TASK, true);
+                        AxExtServiceFactory.getAppUsageManager().setRemoveTaskTime(pr.info.packageName);
                     } else {
                         // We delay killing processes that are not in the background or running a
                         // receiver.
@@ -17578,6 +17647,9 @@ public class ActivityManagerService extends IActivityManager.Stub
         public void startProcess(String processName, ApplicationInfo info, boolean knownToBeDead,
                 boolean isTop, String hostingType, ComponentName hostingName) {
             try {
+                if (BoostAdjuster.CAMERA_APPS.contains(processName)) {
+                    AxExtServiceFactory.getMemoryManager().boostCamera(true);
+                }
                 if (Trace.isTagEnabled(Trace.TRACE_TAG_ACTIVITY_MANAGER)) {
                     Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "startProcess:"
                             + processName);
@@ -19647,7 +19719,10 @@ public class ActivityManagerService extends IActivityManager.Stub
 
     @Override
     public void releaseMemory(int minAdj, int maxKillCount, boolean includeUIProcesses, boolean skipCamera) {
-        mMemoryManager.releaseMemory(minAdj, maxKillCount, includeUIProcesses, skipCamera);
+        mHandler.post(() -> {
+            AxExtServiceFactory.getMemoryManager().releaseMemory(
+                minAdj, maxKillCount, includeUIProcesses, skipCamera);
+        });
     }
 
     @Override

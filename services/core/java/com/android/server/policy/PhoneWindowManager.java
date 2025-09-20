@@ -244,6 +244,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.ScreenshotHelper;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.server.AccessibilityManagerInternal;
+import com.android.server.AxExtServiceFactory;
 import com.android.server.DockObserverInternal;
 import com.android.server.ExtconStateObserver;
 import com.android.server.ExtconUEventObserver;
@@ -423,9 +424,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private static final int POWER_BUTTON_SUPPRESSION_DELAY_DEFAULT_MILLIS = 800;
 
-
-    private static final long MEMORY_RELEASE_INTERVAL_MS = 10 * 60 * 1000L; // 10 minutes
-    private long lastMemoryReleaseTime = 0L;
 
     /**
      * Keyguard stuff
@@ -6415,6 +6413,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
         EventLogTags.writeScreenToggled(1);
 
+        AxExtServiceFactory.getMemoryManager().releaseMemoryAtScreenOn();
+        AxExtServiceFactory.getMemoryManager().loadProcessMemory("com.android.systemui");
+        AxExtServiceFactory.getMemoryManager().loadProcessMemory("com.android.launcher3");
+
         mIsGoingToSleepDefaultDisplay = false;
         mDefaultDisplayPolicy.setAwake(true);
 
@@ -6433,8 +6435,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
 
         mPowerButtonLaunchGestureTriggered = false;
-        
-        releaseMemoryAtScreenOn();
         setLowPowerMode(false);
     }
 
@@ -7908,18 +7908,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     + " for visible background user(u" + assignedUser + ")");
         }
         return false;
-    }
-
-
-    private void releaseMemoryAtScreenOn() {
-        long currentTime = System.currentTimeMillis();
-        if (lastMemoryReleaseTime == 0L || currentTime - lastMemoryReleaseTime > MEMORY_RELEASE_INTERVAL_MS) {
-            try {
-                ActivityManager.getService().releaseMemory(900, 20, false, false);
-                lastMemoryReleaseTime = currentTime;
-            } catch (RemoteException e) {
-            }
-        }
     }
     
     private void setLowPowerMode(boolean enabled) {
