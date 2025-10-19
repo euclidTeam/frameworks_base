@@ -1034,7 +1034,7 @@ public final class NotificationAttentionHelper {
         return true;
     }
 
-    String disableNotificationEffects(NotificationRecord record, int listenerHints) {
+    private String disableNotificationEffects(NotificationRecord record, int listenerHints) {
         if (mDisableNotificationEffects) {
             return "booleanState";
         }

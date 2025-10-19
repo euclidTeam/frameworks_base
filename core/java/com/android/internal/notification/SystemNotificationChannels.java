@@ -67,7 +67,6 @@ public class SystemNotificationChannels {
      */
     @Deprecated public static final String SYSTEM_CHANGES_DEPRECATED = "SYSTEM_CHANGES";
     public static final String SYSTEM_CHANGES = "SYSTEM_CHANGES_ALERTS";
-    public static final String OTHER_USERS = "OTHER_USERS";
     public static final String ACCESSIBILITY_MAGNIFICATION = "ACCESSIBILITY_MAGNIFICATION";
     public static final String ACCESSIBILITY_HEARING_DEVICE = "ACCESSIBILITY_HEARING_DEVICE";
     public static final String ACCESSIBILITY_SECURITY_POLICY = "ACCESSIBILITY_SECURITY_POLICY";
@@ -208,12 +207,6 @@ public class SystemNotificationChannels {
                 .build());
         channelsList.add(systemChanges);
 
-        NotificationChannel otherUsers = new NotificationChannel(OTHER_USERS,
-                context.getString(R.string.notification_channel_other_users),
-                NotificationManager.IMPORTANCE_DEFAULT);
-        otherUsers.setDescription(context.getString(R.string.notification_channel_other_users_description));
-        otherUsers.setBlockable(true);
-        channelsList.add(otherUsers);
 
         NotificationChannel sleepModeChanges = new NotificationChannel(SLEEP,
                 context.getString(R.string.notification_channel_sleep),
