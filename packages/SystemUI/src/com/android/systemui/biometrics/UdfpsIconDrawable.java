@@ -65,7 +65,7 @@ public abstract class UdfpsIconDrawable extends Drawable {
     }
 
     private void init() {
-        if (VoltageUtils.isPackageInstalled(mContext, udfpsResourcesPackage)) {
+        if (EuclidUtils.isPackageInstalled(mContext, udfpsResourcesPackage)) {
             try {
                 PackageManager pm = mContext.getPackageManager();
                 udfpsRes = pm.getResourcesForApplication(udfpsResourcesPackage);
