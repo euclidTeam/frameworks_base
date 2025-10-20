@@ -1499,16 +1499,16 @@ public class EdgeBackGestureHandler implements PluginListener<NavigationEdgeBack
                 EuclidUtils.switchToLastApp(mContext);
                 break;
             case 14: // Powermenu
-                VoltageUtils.showPowerMenu();
+                EuclidUtils.showPowerMenu();
                 break;
             case 15: // Recents
-                VoltageUtils.sendKeycode(KeyEvent.KEYCODE_APP_SWITCH);
+                EuclidUtils.sendKeycode(KeyEvent.KEYCODE_APP_SWITCH);
                 break;
             case 16: // Go forward
-                VoltageUtils.sendKeycode(KeyEvent.KEYCODE_FORWARD);
+                EuclidUtils.sendKeycode(KeyEvent.KEYCODE_FORWARD);
                 break;
             case 17: // Menu
-                VoltageUtils.sendKeycode(KeyEvent.KEYCODE_MENU);
+                EuclidUtils.sendKeycode(KeyEvent.KEYCODE_MENU);
                 break;
         }
     }
