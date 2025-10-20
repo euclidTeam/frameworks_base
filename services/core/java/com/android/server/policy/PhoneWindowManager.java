@@ -246,9 +246,9 @@ import com.android.internal.policy.LogDecelerateInterpolator;
 import com.android.internal.policy.PhoneWindow;
 import com.android.internal.policy.TransitionAnimation;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.internal.util.voltage.VoltageUtils;
+import com.android.internal.util.euclid.EuclidUtils;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.internal.util.voltage.VoltageUtils;
+import com.android.internal.util.euclid.EuclidUtils;
 import com.android.server.AccessibilityManagerInternal;
 import com.android.server.DockObserverInternal;
 import com.android.server.ExtconStateObserver;
@@ -1667,7 +1667,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (mTorchLongPressPowerEnabled && (nonInteractive || isFlashlightOn())) {
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS,
                     "Power - Long Press - Toggle flashlight");
-            VoltageUtils.toggleCameraFlash();
+            EuclidUtils.toggleCameraFlash();
             mPowerKeyHandled = true;
             return true;
         }
@@ -7536,7 +7536,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     public void sendCustomAction(Intent intent) {
         String action = intent.getAction();
         if (action != null) {
-            if (VoltageUtils.INTENT_SCREENSHOT.equals(action)) {
+            if (EuclidUtils.INTENT_SCREENSHOT.equals(action)) {
                 interceptScreenshotChord(SCREENSHOT_KEY_OTHER, 0);
             }
         }

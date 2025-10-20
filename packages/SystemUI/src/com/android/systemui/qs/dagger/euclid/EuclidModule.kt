@@ -253,6 +253,8 @@ interface EuclidModule {
                 ),
                 instanceId = uiEventLogger.getNewInstanceId(),
                 category = TileCategory.CONNECTIVITY
+            )
+        }
 
         @Provides
         @IntoMap
