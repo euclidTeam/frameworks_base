@@ -742,6 +742,8 @@
   <!-- {@deprecated Use a text color from your theme instead.} -->
   <public type="color" name="tertiary_text_light" id="0x01060011" />
 
+  <public type="color" name="system_neutral1_900_alt" id="0x0106037b" />
+
   <public type="array" name="emailAddressTypes" id="0x01070000" />
   <public type="array" name="imProtocols" id="0x01070001" />
   <public type="array" name="organizationTypes" id="0x01070002" />

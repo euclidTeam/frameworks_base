@@ -340,6 +340,7 @@
     <color name="system_neutral1_800">#2F3036</color>
     <!--Shade of the Neutral system color at 10% perceptual luminance (L* in L*a*b* color space). This value can be overlaid at runtime by OverlayManager RROs.-->
     <color name="system_neutral1_900">#1A1B20</color>
+    <color name="system_neutral1_900_alt">@android:color/system_accent1_900</color>
     <!--Darkest shade of the Neutral color used by the system. Black. This value can be overlaid at runtime by OverlayManager RROs.-->
     <color name="system_neutral1_1000">#000000</color>
     <!--Lightest shade of the Secondary Neutral color used by the system. White. This value can be overlaid at runtime by OverlayManager RROs.-->

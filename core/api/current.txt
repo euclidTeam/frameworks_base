@@ -2079,6 +2079,7 @@ package android {
     field public static final int system_neutral1_700 = 17170470; // 0x1060026
     field public static final int system_neutral1_800 = 17170471; // 0x1060027
     field public static final int system_neutral1_900 = 17170472; // 0x1060028
+    field public static final int system_neutral1_900_alt = 17171323; // 0x106037b
     field public static final int system_neutral2_0 = 17170474; // 0x106002a
     field public static final int system_neutral2_10 = 17170475; // 0x106002b
     field public static final int system_neutral2_100 = 17170477; // 0x106002d

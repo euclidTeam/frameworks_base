@@ -1159,6 +1159,8 @@ UnflaggedApi: android.R.color#system_error_800:
     New API must be flagged with @FlaggedApi: field android.R.color.system_error_800
 UnflaggedApi: android.R.color#system_error_900:
     New API must be flagged with @FlaggedApi: field android.R.color.system_error_900
+UnflaggedApi: android.R.color#system_neutral1_900_alt:
+    New API must be flagged with @FlaggedApi: field android.R.color.system_neutral1_900_alt
 UnflaggedApi: android.R.color#system_on_surface_disabled:
     New API must be flagged with @FlaggedApi: field android.R.color.system_on_surface_disabled
 UnflaggedApi: android.R.color#system_on_surface_disabled_dark:
