@@ -34,12 +34,12 @@ import com.android.systemui.qs.tiles.CaffeineTile
 import com.android.systemui.qs.tiles.CompassTile
 import com.android.systemui.qs.tiles.ScreenshotTile
 import com.android.systemui.qs.tiles.SleepModeTile
-import com.android.systemui.qs.tiles.SoundTile
 import com.android.systemui.qs.tiles.UsbTetherTile
 import com.android.systemui.qs.tiles.VPNTetheringTile
 import com.android.systemui.qs.tiles.VolumeTile
 import com.android.systemui.qs.tiles.VpnTile
 import com.android.systemui.qs.tiles.SmartPixelsTile
+import com.android.systemui.qs.tiles.RingerModeTile
 import com.android.systemui.qs.tiles.base.shared.model.QSTileConfig;
 import com.android.systemui.qs.tiles.base.shared.model.QSTilePolicy;
 import com.android.systemui.qs.tiles.base.shared.model.QSTileUIConfig;
@@ -115,12 +115,6 @@ interface EuclidModule {
     @StringKey(SyncTile.TILE_SPEC)
     fun bindSyncTile(syncTile: SyncTile): QSTileImpl<*>
 
-    /** Inject SoundTile into tileMap in QSModule */
-    @Binds
-    @IntoMap
-    @StringKey(SoundTile.TILE_SPEC)
-    fun bindSoundTile(soundTile: SoundTile): QSTileImpl<*>
-
     /** Inject UsbTetherTile into tileMap in QSModule */
     @Binds
     @IntoMap
@@ -162,6 +156,12 @@ interface EuclidModule {
     @IntoMap
     @StringKey(SmartPixelsTile.TILE_SPEC)
     fun bindSmartPixelsTile(smartPixelsTile: SmartPixelsTile): QSTileImpl<*>
+
+    /** Inject RingerModeTile into tileMap in QSModule */
+    @Binds
+    @IntoMap
+    @StringKey(RingerModeTile.TILE_SPEC)
+    fun bindRingerModeTile(RingerModeTile: RingerModeTile): QSTileImpl<*>
 
     companion object {
         @Provides
@@ -226,6 +226,21 @@ interface EuclidModule {
             )
         }
 
+       @Provides
+        @IntoMap
+        @StringKey(RingerModeTile.TILE_SPEC)
+        fun provideRingerConfig(uiEventLogger: QsEventLogger): QSTileConfig {
+            return QSTileConfig(
+                tileSpec = TileSpec.create(RingerModeTile.TILE_SPEC),
+                uiConfig = QSTileUIConfig.Resource(
+                    iconRes = R.drawable.ic_volume_ringer,
+                    labelRes = R.string.quick_settings_ringer_label
+                ),
+                instanceId = uiEventLogger.getNewInstanceId(),
+                category = TileCategory.UTILITIES
+            )
+        }
+
         @Provides
         @IntoMap
         @StringKey(HeadsUpTile.TILE_SPEC)
@@ -268,21 +283,6 @@ interface EuclidModule {
                 ),
                 instanceId = uiEventLogger.getNewInstanceId(),
                 category = TileCategory.DISPLAY
-            )
-        }
-
-       @Provides
-        @IntoMap
-        @StringKey(SoundTile.TILE_SPEC)
-        fun provideSoundConfig(uiEventLogger: QsEventLogger): QSTileConfig {
-            return QSTileConfig(
-                tileSpec = TileSpec.create(SoundTile.TILE_SPEC),
-                uiConfig = QSTileUIConfig.Resource(
-                    iconRes = R.drawable.ic_qs_ringer_audible,
-                    labelRes = R.string.quick_settings_sound_label
-                ),
-                instanceId = uiEventLogger.getNewInstanceId(),
-                category = TileCategory.UTILITIES
             )
         }
 
