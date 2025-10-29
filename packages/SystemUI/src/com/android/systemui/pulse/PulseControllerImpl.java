@@ -101,11 +101,12 @@ public class PulseControllerImpl implements
     private boolean mNavPulseEnabled;
     private boolean mLsPulseEnabled;
     private boolean mAmbPulseEnabled;
-    private boolean mPulseEnabled;
-
     private boolean mKeyguardShowing;
     private boolean mDozing;
     private boolean mKeyguardGoingAway;
+
+    private boolean mNavPulseAttached;
+    private boolean mLsPulseAttached;
 
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -207,7 +208,6 @@ public class PulseControllerImpl implements
                     Settings.Secure.LOCKSCREEN_PULSE_ENABLED, 0, UserHandle.USER_CURRENT) == 1;
             mAmbPulseEnabled = Settings.Secure.getIntForUser(mContext.getContentResolver(),
                     Settings.Secure.AMBIENT_PULSE_ENABLED, 0, UserHandle.USER_CURRENT) == 1;
-            mPulseEnabled = mNavPulseEnabled || mLsPulseEnabled || mAmbPulseEnabled;
         }
 
         void updateRenderMode() {
@@ -238,24 +238,34 @@ public class PulseControllerImpl implements
             && mNavPulseEnabled && !mKeyguardShowing;
 
         if (mKeyguardGoingAway) {
-            detachPulseFrom(vv, allowNavPulse/*keep linked*/);
-        } else if (allowNavPulse) {
-            detachPulseFrom(vv, allowNavPulse/*keep linked*/);
-            attachPulseTo(nv);
-        } else if (allowLsPulse || allowAmbPulse) {
+            if (mLsPulseAttached) {
+                detachPulseFrom(vv, allowNavPulse/*keep linked*/);
+                mLsPulseAttached = false;
+            }
+            return;
+        }
+        if (!allowNavPulse && mNavPulseAttached) {
             detachPulseFrom(nv, allowLsPulse || allowAmbPulse/*keep linked*/);
+            mNavPulseAttached = false;
+        }
+        if (!allowLsPulse && !allowAmbPulse && mLsPulseAttached) {
+            detachPulseFrom(vv, allowNavPulse/*keep linked*/);
+            mLsPulseAttached = false;
+        }
+
+        if ((allowLsPulse || allowAmbPulse) && !mLsPulseAttached) {
             attachPulseTo(vv);
-        } else {
-            detachPulseFrom(nv, false /*keep linked*/);
-            detachPulseFrom(vv, false /*keep linked*/);
+            mLsPulseAttached = true;
+        } else if (allowNavPulse && !mNavPulseAttached) {
+            attachPulseTo(nv);
+            mNavPulseAttached = true;
         }
     }
 
     public void setDozing(boolean dozing) {
         if (mDozing != dozing) {
             mDozing = dozing;
-            if (mPulseEnabled)
-                updatePulseVisibility();
+            updatePulseVisibility();
         }
     }
 
@@ -265,8 +275,7 @@ public class PulseControllerImpl implements
             if (mRenderer != null) {
                 mRenderer.setKeyguardShowing(showing);
             }
-            if (mPulseEnabled)
-                updatePulseVisibility();
+            updatePulseVisibility();
         }
     }
 
