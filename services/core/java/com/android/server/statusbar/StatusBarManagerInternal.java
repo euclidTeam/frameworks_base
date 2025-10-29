@@ -286,9 +286,4 @@ public interface StatusBarManagerInternal {
 
     /** Passes through the given shell commands to SystemUI */
     void passThroughShellCommand(String[] args, FileDescriptor fd);
-
-    /**
-     * Window manager notifies SystemUI of navigation bar "left in landscape" changes
-     */
-    void leftInLandscapeChanged(boolean isLeft);
 }

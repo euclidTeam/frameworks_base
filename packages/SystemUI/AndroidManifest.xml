@@ -398,9 +398,6 @@
     <!-- To be able to set unrestricted system gesture exclusion rects -->
     <uses-permission android:name="android.permission.SET_UNRESTRICTED_GESTURE_EXCLUSION"/>
 
-    <!-- Pulse -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
     <!-- DataSwitch tile -->
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
 
