@@ -24,7 +24,6 @@ package com.android.systemui.pulse;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
-import android.view.WindowManager;
 
 public abstract class Renderer implements VisualizerStreamHandler.Listener {
     protected Context mContext;
@@ -33,8 +32,8 @@ public abstract class Renderer implements VisualizerStreamHandler.Listener {
     protected ColorController mColorController;
     protected boolean mIsValidStream;
 
-    private long mPulseFPS;
-    private long mPulseFPSToMs;
+    private static final long ANIM_FPS_MAX = 40;
+    private static final long ANIM_FPS_TO_MILLIS = 1000 / ANIM_FPS_MAX;
     private long mCurrentTime;
     private long mRenderCounter;
     private long mCurrentCounter;
@@ -46,16 +45,13 @@ public abstract class Renderer implements VisualizerStreamHandler.Listener {
         mHandler = handler;
         mView = view;
         mColorController = colorController;
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         mRenderCounter = System.currentTimeMillis();
-        mPulseFPS = (int) wm.getDefaultDisplay().getRefreshRate();
-        mPulseFPSToMs = 1000 / mPulseFPS;
     }
 
     protected final void postInvalidate() {
         mCurrentTime = System.currentTimeMillis();
         mCurrentCounter = mCurrentTime - mRenderCounter;
-        if (mCurrentCounter >= mPulseFPSToMs) {
+        if (mCurrentCounter >= ANIM_FPS_TO_MILLIS) {
             mRenderCounter = mCurrentTime;
             mView.postInvalidate();
         }
