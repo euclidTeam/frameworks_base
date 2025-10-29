@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2014 The TeamEos Project
- * Copyright (C) 2016-2024 crDroid Android Project
+ * Copyright (C) 2016-2023 crDroid Android Project
  *
  * @author: Randall Rushing <randall.rushing@gmail.com>
  *
@@ -52,7 +52,6 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
@@ -305,10 +304,6 @@ public class PulseControllerImpl implements
         if (parent == null) return;
         View v = parent.findViewWithTag(PulseView.TAG);
         if (v == null) {
-            if (mPulseView.getParent() != null) {
-                // Remove PulseView from its current parent
-                ((ViewGroup) mPulseView.getParent()).removeView(mPulseView);
-            }
             parent.addView(mPulseView);
             mAttached = true;
             log("attachPulseTo() ");
@@ -319,7 +314,7 @@ public class PulseControllerImpl implements
     private void detachPulseFrom(FrameLayout parent, boolean keepLinked) {
         if (parent == null) return;
         View v = parent.findViewWithTag(PulseView.TAG);
-        if (v != null && mPulseView.getParent() == parent) {
+        if (v != null) {
             parent.removeView(mPulseView);
             mAttached = keepLinked;
             log("detachPulseFrom() ");
@@ -422,7 +417,6 @@ public class PulseControllerImpl implements
      */
     private boolean isUnlinkRequired() {
         return (!mScreenOn && !mAmbPulseEnabled)
-                || !mIsMediaPlaying
                 || mPowerSaveModeEnabled
                 || mMusicStreamMuted
                 || mScreenPinningEnabled
