@@ -891,9 +891,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
         mWindowManagerProvider = windowManagerProvider;
         NTForbiddenSwipeDownQSController.Companion.init(mContext, mKeyguardStateController);
         
-        ScreenAnimationController.INSTANCE().init(
-            new AmbientDisplayConfiguration(mContext), 
-            (DisplayManager) context.getSystemService("display"));
+        ScreenAnimationController.INSTANCE().init(new AmbientDisplayConfiguration(mContext));
     }
 
     private void initBubbles(Bubbles bubbles) {

@@ -203,6 +203,7 @@ constructor(
     }
 
     private fun setupIconTransitions() {
+        /*
         // LockscreenFp <=> LockscreenUnlocked
         animatedIconDrawable.addTransition(
             R.id.locked_fp,
@@ -215,7 +216,7 @@ constructor(
             R.id.locked_fp,
             context.getDrawable(R.drawable.unlock_to_fp) as AnimatedVectorDrawable,
             /* reversible */ false,
-        )
+        )*/
 
         // LockscreenLocked <=> AodLocked
         animatedIconDrawable.addTransition(
@@ -260,12 +261,13 @@ constructor(
         )
 
         // LockscreenFingerprint => LockscreenLocked
+        /*
         animatedIconDrawable.addTransition(
             R.id.locked_fp,
             R.id.locked,
             context.getDrawable(R.drawable.fp_to_locked) as AnimatedVectorDrawable,
             /* reversible */ false,
-        )
+        )*/
 
         // LockscreenUnlocked <=> AodLocked
         animatedIconDrawable.addTransition(
