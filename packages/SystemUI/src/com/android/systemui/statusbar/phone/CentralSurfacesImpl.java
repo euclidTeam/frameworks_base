@@ -256,6 +256,7 @@ import com.android.wm.shell.startingsurface.StartingSurface;
 import dalvik.annotation.optimization.NeverCompile;
 
 import dagger.Lazy;
+import android.provider.Settings;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
