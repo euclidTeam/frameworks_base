@@ -178,5 +178,7 @@ interface ISystemUiProxy {
      */
     oneway void updateContextualEduStats(boolean isTrackpadGesture, String gestureType) = 58;
 
-    // Next id = 59
+    oneway void notifyGoingToSleepByDoubleClick(int x, int y) = 59;
+
+    // Next id = 60
 }

@@ -2512,5 +2512,8 @@ public class QuickSettingsControllerImpl implements QuickSettingsController, Dum
                 child.post(row::updateIfNeeded);
             }
         }
+
+    public boolean isVisible() {
+        return mVisible;
     }
 }

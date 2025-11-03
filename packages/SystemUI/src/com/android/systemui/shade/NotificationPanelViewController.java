@@ -793,6 +793,7 @@ public final class NotificationPanelViewController implements
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 if (mPowerManager != null) {
+                    com.android.systemui.util.TapPositionUtil.INSTANCE().setTapPos((int) e.getX(), (int) e.getY());
                     mPowerManager.goToSleep(e.getEventTime());
                 }
                 return true;
@@ -4411,4 +4412,77 @@ public final class NotificationPanelViewController implements
             return super.performAccessibilityAction(host, action, args);
         }
     }
+<<<<<<< HEAD
+=======
+
+    private void doUpdateStatusBarCustomHeader(Drawable drawable, boolean force) {
+        if (drawable != null) {
+            mQsHeaderImageView.setVisibility(View.VISIBLE);
+            mCurrentBackground = drawable;
+            setNotificationPanelHeaderBackground(drawable, force);
+        } else {
+            mCurrentBackground = null;
+            mQsHeaderImageView.setVisibility(View.GONE);
+        }
+        if (mHeaderImageEnabled) {
+            updateHeaderImage();
+        }
+    }
+
+    private void updateHeaderImage() {
+        float shadeHeaderExpansion = mShadeHeaderController.getShadeExpandedFraction();
+        if (shadeHeaderExpansion > 0f &&
+            mOrientation != Configuration.ORIENTATION_LANDSCAPE &&
+            mCurrentBackground != null && mQsHeaderImageView.getDrawable() != null) {
+
+            if (mQsHeaderLayout.getVisibility() != View.VISIBLE) {
+                int headerImageHeight = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        mHeaderImageHeight,
+                        mView.getResources().getDisplayMetrics());
+
+                ViewGroup.LayoutParams params = mQsHeaderLayout.getLayoutParams();
+                params.height = headerImageHeight;
+                mQsHeaderLayout.setLayoutParams(params);
+
+                mQsHeaderLayout.setFadeSizes(0, 0,
+                        (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                mBottomFadeHeight,
+                                mView.getResources().getDisplayMetrics()),
+                        0);
+
+                mQsHeaderLayout.setVisibility(View.VISIBLE);
+            }
+            if (mShadeHeaderExpansion != shadeHeaderExpansion) {
+                mShadeHeaderExpansion = shadeHeaderExpansion;
+                mQsHeaderImageView.setImageAlpha( (int)
+                    (mShadeHeaderExpansion * (255 - mHeaderImageShadow)));
+            }
+        } else {
+            mQsHeaderLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void setNotificationPanelHeaderBackground(Drawable dw, boolean force) {
+        if (mQsHeaderImageView.getDrawable() != null && !force) {
+            Drawable[] layers = new Drawable[]{mQsHeaderImageView.getDrawable(), dw};
+            TransitionDrawable transitionDrawable = new TransitionDrawable(layers);
+            transitionDrawable.setCrossFadeEnabled(true);
+            mQsHeaderImageView.setImageDrawable(transitionDrawable);
+            transitionDrawable.startTransition(1000);
+        } else {
+            mQsHeaderImageView.setImageDrawable(dw);
+        }
+    }
+
+    public boolean isPanelFullyCollapsed() {
+        int state = mBarState;
+        if (state == StatusBarState.SHADE_LOCKED 
+            || state == StatusBarState.KEYGUARD) {
+            return !mQsController.isVisible();
+        }
+        return mExpandedFraction <= 0.0f;
+    }
+>>>>>>> 9436e7a077dd ([FEATURE]: add nothingOS always-on-display changes)
 }
